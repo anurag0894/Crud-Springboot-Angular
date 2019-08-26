@@ -1,0 +1,132 @@
+<h3>Enter Details</h3>
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+    <div [hidden]="submitted" style="width: 400px;">
+      <form [formGroup]="studentsaveform" #savestudent (ngSubmit)="saveStudent(saveStudent)">
+        
+        <div class="form-group">
+          <label for="name">Title</label>
+          <input type="text" class="form-control" formControlName="Title" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Name">
+
+        </div>
+
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input type="text" class="form-control" formControlName="Username" data-toggle="tooltip"
+            data-placement="right" title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="name">Gender</label>
+          <input type="text" class="form-control" formControlName="Gender" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="name">DateOfBirth</label>
+          <input type="text" class="form-control" formControlName="DateOfBirth" data-toggle="tooltip"
+            data-placement="right" title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="name">Address</label>
+          <input type="text" class="form-control" formControlName="Address" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+
+
+
+        <div class="form-group">
+          <label for="branch">State</label>
+          <input type="text" class="form-control" formControlName="State" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="branch">Country</label>
+          <input type="text" class="form-control" formControlName="Country" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="branch">Marital Status</label>
+          <select class="form-control" formControlName="maritalStatus" data-toggle="tooltip" data-placement="right"
+            title="Select Student Branch">
+            <option value="null">--Select Status--</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Single Mother">Single Mother</option>
+            <option value="Single Father">Single Father</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="branch">Qualification</label>
+          <input type="text" class="form-control" formControlName="qualification" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+
+        <div class="form-group">
+          <label for="branch">Experience</label>
+          <input type="text" class="form-control" formControlName="exp" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+        <div class="form-group">
+          <label for="branch">Skills</label>
+          <input type="text" class="form-control" formControlName="skills" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+        <div class="form-group">
+          <label for="branch">certificate</label>
+          <input type="text" class="form-control" formControlName="certificate" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+
+        </div>
+        <div class="form-group">
+          <label for="branch">Pan</label>
+          <input type="text" class="form-control" formControlName="pan" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+        </div>
+        <div class="form-group">
+          <label for="branch">Mobile Number</label>
+          <input type="text" class="form-control" formControlName="mobile_number" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+        </div>
+        <div class="form-group">
+          <label for="branch">Language</label>
+          <input type="text" class="form-control" formControlName="language" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+        </div>
+        <div class="form-group">
+          <label for="branch">Email</label>
+          <input type="text" class="form-control" formControlName="email" data-toggle="tooltip" data-placement="right"
+            title="Enter Student Email">
+        </div>
+
+
+        <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-sm-4"></div>
+</div>
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+    <div [hidden]="!submitted">
+      <h5>User Added SuccessFully!</h5>
+    </div>
+  </div>
+  <div class="col-sm-4"></div>
+</div>

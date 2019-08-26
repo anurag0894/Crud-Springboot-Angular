@@ -1,0 +1,167 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 style="text-align: center">Profiles</h1><br>
+    <div class="row" [hidden]="!deleteMessage">
+
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <div class="alert alert-info alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Profile Data Deleted</strong>
+        </div>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+  </div>
+
+
+  <div class="panel-body">
+    <table class="table table-hover table-sm" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead class="thead-light">
+        <tr>
+          <th>Candidate Name</th>
+          <th>Candidate Email</th>
+          <th>Candidate pan</th>
+          <th>Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students ">
+          <td>{{student.employee_username}}</td>
+          <td>{{student.employee_email}}</td>
+          <td>{{student.employee_pan}}</td>
+          <td><button (click)="deleteStudent(student.employee_email)" class='btn btn-primary'><i
+                class="fa fa-futboll-0">Delete</i></button>&nbsp;
+            <button (click)="updateStudent(student.employee_email)" class='btn btn-info' data-toggle="modal"
+              data-target="#myModal">Update</button>
+          </td>
+        </tr>
+      </tbody><br>
+    </table>
+  </div>
+</div>
+
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="studentupdateform" #updstu (ngSubmit)="updateStu(updstu)">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align: center">Update Candidate Profile</h4>
+
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" *ngFor="let student of studentlist ">
+          <div [hidden]="isupdated">
+
+            <input type="hidden" class="form-control" formControlName="employee_id" [(ngModel)]="student.employee_id">
+
+            <div class="form-group">
+              <label for="name">Title</label>
+              <input type="text" class="form-control" formControlName="Title" [(ngModel)]="student.employee_title">
+            </div>
+
+            <div class="form-group">
+              <label for="name">Username</label>
+              <input type="text" class="form-control" formControlName="Username"
+                [(ngModel)]="student.employee_username">
+            </div>
+
+            <div class="form-group">
+              <label for="name">email</label>
+              <input type="text" class="form-control" formControlName="email" [(ngModel)]="student.employee_email">
+            </div>
+
+
+            <div class="form-group">
+              <label for="name">Gender</label>
+              <input type="text" class="form-control" formControlName="Gender" [(ngModel)]="student.employee_gender">
+            </div>
+
+            <div class="form-group">
+              <label for="name">DateOfBirth</label>
+              <input type="text" class="form-control" formControlName="DateOfBirth"
+                [(ngModel)]="student.employee_dateOfBirth">
+            </div>
+
+            <div class="form-group">
+              <label for="name">Address</label>
+              <input type="text" class="form-control" formControlName="Address" [(ngModel)]="student.employee_address">
+            </div>
+
+            <div class="form-group">
+              <label for="name">State</label>
+              <input type="text" class="form-control" formControlName="State" [(ngModel)]="student.employee_state">
+            </div>
+
+            <div class="form-group">
+              <label for="name">Country</label>
+              <input type="text" class="form-control" formControlName="Country" [(ngModel)]="student.employee_country">
+            </div>
+
+            <div class="form-group">
+              <label for="name">maritalStatus</label>
+              <input type="text" class="form-control" formControlName="maritalStatus"
+                [(ngModel)]="student.employee_maritalStatus">
+            </div>
+
+            <div class="form-group">
+              <label for="name">qualification</label>
+              <input type="text" class="form-control" formControlName="qualification"
+                [(ngModel)]="student.employee_qualification">
+            </div>
+
+            <div class="form-group">
+              <label for="name">exp</label>
+              <input type="text" class="form-control" formControlName="exp" [(ngModel)]="student.employee_exp">
+            </div>
+
+            <div class="form-group">
+              <label for="name">skills</label>
+              <input type="text" class="form-control" formControlName="skills" [(ngModel)]="student.employee_skills">
+            </div>
+
+            <div class="form-group">
+              <label for="name">certificate</label>
+              <input type="text" class="form-control" formControlName="certificate"
+                [(ngModel)]="student.employee_certification">
+            </div>
+
+            <div class="form-group">
+              <label for="name">pan</label>
+              <input type="text" class="form-control" formControlName="pan" [(ngModel)]="student.employee_pan">
+            </div>
+
+            <div class="form-group">
+              <label for="name">mobile_number</label>
+              <input type="text" class="form-control" formControlName="mobile_number"
+                [(ngModel)]="student.employee_mobile_number">
+            </div>
+
+            <div class="form-group">
+              <label for="name">language</label>
+              <input type="text" class="form-control" formControlName="language"
+                [(ngModel)]="student.employee_language">
+            </div>
+
+
+
+          </div>
+          <div [hidden]="!isupdated">
+            <h4>Candidate Detail Updated!</h4>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" [hidden]="isupdated">Update</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="changeisUpdate()">Close</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

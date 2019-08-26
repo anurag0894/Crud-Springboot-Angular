@@ -1,0 +1,39 @@
+ <div class="panel panel-default">
+  <div class="panel-heading">
+      <h1>Status</h1>
+  </div>
+  <div class="panel-body">
+      <table datatable [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger"   class="row-border hover" >
+          <thead>
+              <tr>
+                  <th>Job Id</th>
+                  <th>Job Description</th>
+                  <th>Job Status</th>
+                  <th>Contact Person</th>
+                  <th>Doument to Self Attest</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              <tr *ngFor="let partner of partners">
+                  <td>{{partner.job_Id}}</td>
+                  <td>{{partner.job_Description}}</td>
+                  <td>{{partner.job_Status}}</td>
+                  <td>{{partner.contact_Person_Details}}</td>
+                  <td><button (click)="downloadFile()">Download Document</button> </td>
+
+              </tr>
+              <tr>
+                    <td>175</td>
+                    <td>Full Stack Developer</td>
+                    <td>Rejected</td>  
+                    <td></td>  
+                    <td></td>  
+                </tr>
+          </tbody>
+      </table>
+  </div>
+</div> 
+
+
