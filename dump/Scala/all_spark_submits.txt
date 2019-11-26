@@ -1,0 +1,308 @@
+
+/bin/spark-submit --class o_iqp_order_delivery_fact --master yarn --num-executors 1 --driver-memory 10g  --executor-memory 10g --executor-cores 5 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=4 /home/rajeebp/OMDimFact/target/scala-2.11/simple-project_2.11-1.0.jar
+
+/bin/spark-submit --class o_iqp_legacy_invoice_mgmt_fact_test --master yarn --num-executors 3 --driver-memory 40g  --executor-memory 40g --executor-cores 7 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1 /home/rajeebp/OMDimFact/target/scala-2.11/simple-project_2.11-1.0.jar
+
+/bin/spark-shell  --master yarn --num-executors 2 --driver-memory 50g  --executor-memory 50g --executor-cores 4 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer --conf spark.executor.extraClassPath=/home/rajeebp/TestProject/lib/ojdbc7-12.1.0.2.jar   --keytab /home/rajeebp/rajeebp.keytab --conf spark.driver.extraClassPath=/home/rajeebp/TestProject/lib/ojdbc7-12.1.0.2.jar
+
+
+spark-submit --class o_iqp_sc_adjustments_stg  --master yarn --num-executors 6  \
+    --driver-memory 40g   --executor-memory 40g --executor-cores 5 --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 \
+    --conf "spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/rajeebp/log4j.xml" \
+    --conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=file:/home/rajeebp/log4j.xml" \
+	--conf spark.driver.maxResultSize=2050 \
+    --jars /home/rajeebp/pgCommonTest/target/scala-2.11/utils_2.11-1.0.jar \
+    /home/rajeebp/iqp_ma/target/scala-2.11/iqp-ma_2.11-1.0.jar\
+    debug=true	
+
+	OMDimFact---simple-project_2.11-1.0.jar
+	iqp_fact--- iqp-fact_2.11-1.0.jar
+	
+/bin/spark-submit --class o_iqp_hmrc_rate_ref --master yarn --num-executors 1 --driver-memory 10g  --executor-memory 10g --executor-cores 5 --conf spark.scheduler.mode=FAIR  /home/rajeebp/OMDimFact/target/scala-2.11/simple-project_2.11-1.0.jar
+
+for compiling
+
+sbt-compiler makes target jar file from src .scala files
+
+~/sbt/bin/sbt
+compile
+package
+exit
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_common_stg_flag_upd --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_common_stg_flag_upd/iqp_common_stg_flag_upd_2.11-1.0.jar --debug=true
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5  --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_sales_agg_legacy --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_sales_agg_legacy/iqp_sales_agg_legacy_2.11-1.0.jar 
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5  --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 40g --executor-memory 40g --class o_iqp_sales_agg --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_sales_agg/iqp_sales_agg_2.11-1.0.jar
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_services_fact_roc_retrn_sytln_ship_ora --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_quality/iqp_services_fact_roc_retrn_sytln_ship_ora/iqp_services_fact_roc_retrn_sytln_ship_ora_2.11-1.0.jar
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_order_booking_fact_legacy --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_order_booking_fact_legacy/iqp_order_booking_fact_legacy_2.11-1.0.jar --debug=true
+
+
+IQP_SALES_AGG
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_sales_to_csv --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_inv/sales_to_csv/sales_to_csv_2.11-1.0.jar
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_update_table_only_sales --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_update_table_only_sales/iqp_update_table_only_sales_2.11-1.0.jar
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_gs_financial_dashboard_details --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_reports/iqp_gs_financial_dashboard_details/iqp_gs_financial_dashboard_details_2.11-1.0.jar
+
+select al_gem_gs.iqp_sales_agg_update()
+hdfs dfs -ls /tmp/iqp/external_files/iqp_sales_agg__x  
+hdfs dfs -rm rf /tmp/iqp/external_files/iqp_sales_agg__x/*
+select count(*),created_by from g00103.iqp_sales_agg group by created_by
+select * from iqp_sales_agg where processdate is null
+
+
+spark.sql("set hive.exec.dynamic.partition.mode=nonstrict")
+spark.sql("set hive.exec.dynamic.partition=true")
+spark.sql("ALTER TABLE g00103.iqp_sales_agg DROP IF EXISTS PARTITION(created_by='iqp_sales_agg_erp')")
+spark.sql("ALTER TABLE g00103.iqp_sales_agg DROP IF EXISTS PARTITION(created_by='iqp_sales_agg_legacy')")
+spark.sql("ALTER TABLE g00103.iqp_sales_agg DROP IF EXISTS PARTITION(created_by='iqp_sales_agg')")
+spark.sql("insert into table g00103.iqp_sales_agg partition (created_by) select * from g00103.iqp_sales_agg__x")
+
+
+
+main.createOrReplaceTempView("mytempTable") 
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 15g --executor-memory 15g --class o_iqp_order_mgmt_fact_legacy --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_order_mgmt_fact_legacy/iqp_order_mgmt_fact_legacy_2.11-1.0.jar
+
+
+
+val jdbcUrl = "jdbc:oracle:thin:@emdealgaqdwdb01.cloud.ge.com:1522:enndeq01"
+val a1 = spark.read.format("jdbc").option("url", jdbcUrl).option("dbtable", "iqp.iqp_po_vendor_sites_all_stg").option("user", username).option("password", password).load()
+a1.createOrReplaceTempView("mytempTablea") 
+spark.sql("create table g00103.MSC_ITEM_CATEGORIES as select * from mytempTablea");
+
+
+val dfOracleResult = spark.read.format("jdbc").option("url", jdbcUrl).option("dbtable", "iqp.iqp_po_vendor_sites_all_stg").option("user", username).option("password", password).load()
+
+res10.createOrReplaceTempView("mytempTable") 
+
+insert overwrite table g00103.iqp_mrp_exception_fact 
+
+res5.coalesce(50).write.format("orc").mode("overwrite").saveAsTable("g00103.iqp_item_cycle_count_fact")
+
+finalResultToWrite.write.format("orc").mode("overwrite").saveAsTable("g00103.po_temp")
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 12 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g  --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 --class o_co_daily_extract --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_services/co_daily_extract/co_daily_extract_2.11-1.0.jar filter1="'2018-07-01'" filter2="'2018-09-30'" filename="co_daily"  
+
+Hadoop-PROD
+
+lg779244 
+lg779244@904
+
+Hadoop-DEV
+
+rajeebp
+rajeebp@456
+
+
+GP-PROD
+
+502682075 
+Grid2016Service 
+
+GP-DEV
+
+502749466
+em1234gs
+
+
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-shell  --master yarn --num-executors 2 --driver-memory 40g  --executor-memory 40g --executor-cores 5 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer  --jars /home/rajeebp/master_jars/iqp_ingestion/sales_daily_extract/lib/*
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-shell          (for dev)
+
+beeline -u 'jdbc:hive2://alphd1px000.dlx.idc.ge.com:10000/;transportMode=binary;principal=hive/_HOST@DLX.IDC.GE.COM' 
+
+kinit lg779244 -k -t /home/lg779244/lg779244.keytab
+
+res828.filter("order_number =  '100030373'").count
+
+Oracle: https://tableau.pw.ge.com/#/site/EnergyConnections/projects/798/workbooks
+
+attiqiti
+
+
+
+502739173
+SAt123yam
+
+
+
+MA
+
+spark.sql("truncate table g00103.BACKLOG_STAGE_FLAT_FILE")
+spark.sql("truncate table g00103.orders_stage_flat_file")
+spark.sql("truncate table g00103.IQP_SC_ADJUSTMENTS_STG_BACKLOG")
+spark.sql("truncate table g00103.IQP_SC_ADJUSTMENTS_STG_SALES")
+spark.sql("truncate table g00103.IQP_SC_ADJUSTMENTS_STG_ORDERS")
+spark.sql("truncate table g00103.IQP_BACKLOG_AGG_WIP")
+
+
+
+
+sh Pulse_ConversionNEW2.sh
+sh validation1.sh
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5  --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_sales_agg_legacy --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_ma/manual_adjustment_flat_to_stg/manual_adjustment_flat_to_stg_2.11-1.0.jar 
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_sc_adjustments_stg --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_ma/iqp_sc_adjustments_stg/iqp_sc_adjustments_stg_2.11-1.0.jar 
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5  --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 20g --executor-memory 20g --class o_iqp_sales_agg --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_ma/iqp_agg_wip/iqp_agg_wip_2.11-1.0.jar
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 2 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 30g --executor-memory 30g --class o_iqp_fact_ma --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_ma/iqp_fact_ma/iqp_fact_ma_2.11-1.0.jar
+
+select * from g00103.iqp_order_booking_fact_ma
+select * from g00103.iqp_sales_agg_ma
+select * from g00103.iqp_backlog_agg_ma
+
+/bin/spark-shell  --master yarn --num-executors 2 --driver-memory 40g  --executor-memory 40g --executor-cores 5 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer  --jars /home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar --conf spark.executor.extraClassPath=/home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar   --conf spark.driver.extraClassPath=/home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar
+
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 40g --executor-memory 40g --class o_iqp_invoice_mgmt_fact --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_invoice_mgmt_fact/iqp_invoice_mgmt_fact_2.11-1.0.jar
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 40g --executor-memory 40g --class o_iqp_legacy_invoice_mgmt_fact --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_fact/iqp_legacy_invoice_mgmt_fact/iqp_legacy_invoice_mgmt_fact_2.11-1.0.jar
+
+
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 5 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 40g --executor-memory 40g --class o_iqp_sn_genealogy_fact --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_others/iqp_sn_genealogy_fact/iqp_sn_genealogy_fact_2.11-1.0.jar
+
+
+/bin/spark-shell  --master yarn --num-executors 1 --driver-memory 40g  --executor-memory 40g --executor-cores 3 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer  --jars /home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar --conf spark.executor.extraClassPath=/home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar   --conf spark.driver.extraClassPath=/home/lg779244/TestProject/lib/ojdbc7-12.1.0.2.jar
+ 
+/usr/hdp/2.6.2.0-205/spark2/bin/spark-submit --master yarn --num-executors 4 --executor-cores 12 --files /usr/hdp/2.6.2.0-205/spark2/conf/hive-site.xml --driver-memory 40g --executor-memory 40g --class o_iqp_legacy_catalog_list --conf spark.scheduler.mode=FAIR --conf spark.driver.cores=1 /data/staging/g00103/ge_power/iqp/iqp_dim/iqp_legacy_catalog_list/iqp_legacy_catalog_list_2.11-1.0.jar
+
+ 
+ spark.sql("set spark.sql.shuffle.partitions=20")
+spark.sql("set hive.exec.dynamic.partition.mode=nonstrict")
+spark.sql("set hive.exec.dynamic.partition=true")
+
+
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql._
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.security.UserGroupInformation;
+import collection.mutable.HashMap
+import scala.collection.mutable.ArrayBuffer
+import java.sql.DriverManager
+import java.sql.Connection
+import java.sql.ResultSet
+import java.sql.Statement
+ 
+Class.forName("oracle.jdbc.driver.OracleDriver");
+ 
+val jdbcUrl = "jdbc:oracle:thin:@emdeciohpdwdb01.cloud.ge.com:1521:enndep01"
+ 
+
+
+val username = "SSO502334854";
+val password = "wQk59mHI"; 
+
+val dfOracleResult = spark.read.format("jdbc").option("url", jdbcUrl).option("dbtable", "iqp.iqp_sales_agg").option("user", username).option("password", password).load()
+ 
+
+dfOracleResult.write.format("orc").mode("overwrite").saveAsTable("g00103.iqp_sales_agg_arch1")
+
+val new_df=dfOracleResult.withColumn("SECURED",dfOracleResult("SECURED_$")).drop("SECURED_$")
+
+
+Library
+
+http://libraries.ge.com/foldersIndex.do?entity_id=46402838101&sid=101&SF=1
+502722214
+B9438139926@ra
+
+
+select sum(case when TRANSACTIONAL_CURRENCY_CODE = 'USD' then TRANSACTIONAL_CURRENCY_AMOUNT 
+else LKP_CONVERSION.CONVERSION_RATE*TRANSACTIONAL_CURRENCY_AMOUNT end)
+ from al_gem_gs.iqp_sap_orders_stg
+left join 
+(
+SELECT  DR.CONVERSION_DATE AS CONVERSION_DATE,
+                DR.FROM_CURRENCY   AS FROM_CURRENCY,
+                max(DR.CONVERSION_RATE) AS CONVERSION_RATE
+  FROM gem_bravo_hvr.gl_daily_rates DR
+ WHERE DR.CONVERSION_TYPE = '1000'
+   AND DR.TO_CURRENCY = 'USD'
+   group by DR.CONVERSION_DATE,DR.FROM_CURRENCY
+)LKP_CONVERSION on(DATE(LKP_CONVERSION.CONVERSION_DATE)=DATE(iqp_sap_orders_stg.ORDER_RECEIPT_DATE) and upper(LKP_CONVERSION.FROM_CURRENCY)=upper(iqp_sap_orders_stg.TRANSACTIONAL_CURRENCY_CODE))
+
+select sum(case when TRANSACTIONAL_CURRENCY_CODE = 'USD' then TRANSACTIONAL_CURRENCY_AMOUNT 
+else LKP_CONVERSION.CONVERSION_RATE*TRANSACTIONAL_CURRENCY_AMOUNT end)
+ from g00103.iqp_sap_sales_stg
+left join 
+(
+SELECT  DR.CONVERSION_DATE AS CONVERSION_DATE,
+                DR.FROM_CURRENCY   AS FROM_CURRENCY,
+                max(DR.CONVERSION_RATE) AS CONVERSION_RATE
+  FROM g00103.gl_daily_rates DR
+ WHERE DR.CONVERSION_TYPE = '1000'
+   AND DR.TO_CURRENCY = 'USD'
+   group by DR.CONVERSION_DATE,DR.FROM_CURRENCY
+)LKP_CONVERSION on(to_date(LKP_CONVERSION.CONVERSION_DATE)=to_date(iqp_sap_sales_stg.ORDER_RECEIPT_DATE) and upper(LKP_CONVERSION.FROM_CURRENCY)=upper(iqp_sap_sales_stg.TRANSACTIONAL_CURRENCY_CODE))
+inner join g00103.iqp_business_hier_dim on(iqp_business_hier_dim.plantcode_id=iqp_sap_sales_stg.management_entity)
+where iqp_business_hier_dim.tier2='GRID AUTOMATION' and tier3='SAS'
+
+
+
+select a.cust_trx_line_gl_dist_id,gl_date,total_invoice_line_amount,BATCH_SOURCES_ALL_NAME, a.processdate,a.report_process1,b.process_date,b.report_process1 from my_table_orc a inner join iqp_invoice_mgmt_fact b on a.cust_trx_line_gl_dist_id=b.cust_trx_line_gl_dist_id
+where a.report_process1<>b.report_process1
+
+select * from invoice_mgmt_fact_process_date_stg where cust_trx_line_gl_dist_id='25575146'
+
+
+UPDATE IQP.IQP_INVOICE_MGMT_FACT
+SET REPORT_PROCESS1 = null,
+RECORD_UPDATED_DATE=sysdate
+WHERE REPORT_PROCESS1 in ('Rejected','Invoice Reporting')
+and 
+(
+RECORD_UPDATED_DATE > nvl(to_date('$$Invoice_Last_Update_Date','mm/dd/yyyy hh24:mi:ss'), trunc(sysdate-7))
+or
+(
+trunc(GL_DATE) >= trunc(sysdate-7)
+and trunc(GL_DATE) <= trunc(sysdate)
+)
+);
+
+commit;
+
+UPDATE IQP.IQP_INVOICE_MGMT_FACT
+SET PROCESS_DATE =
+(
+select
+case
+when to_char(sysdate, 'AM') = 'AM'
+then trunc(sysdate-1)
+else trunc(sysdate)
+end
+as process_date
+from dual
+),
+REPORT_PROCESS1 =(SELECT  DISTINCT INCLUSION_LEGEND FROM IQP.IQP_BUSINESS_RULE_DIM WHERE TABLE_NAME = 'IQP_INVOICE_MGMT_FACT'),
+Record_updated_by = '$PMMappingName',
+record_updated_date = sysdate
+ 
+where REPORT_PROCESS1 is null ;
+
+Commit;
+
+
+UPDATE IQP.IQP_INVOICE_MGMT_FACT
+set REPORT_PROCESS1='ICS Reporting'
+where REPORT_PROCESS1='Pulse Reporting' and 
+upper(BATCH_SOURCES_ALL_NAME) = 'PROJECTS INVOICES';
+
+commit;
+
+UPDATE IQP.IQP_INVOICE_MGMT_FACT
+SET REPORT_PROCESS1 = 'Invoice Reporting',
+	  PROCESS_DATE = TRUNC(SYSDATE-1)
+WHERE REPORT_PROCESS1 = 'Rejected' 
+AND       UPPER(BATCH_SOURCES_ALL_NAME) = 'OKS_CONTRACTS' 
+AND	  GL_DATE > TRUNC(SYSDATE) ;
+
+COMMIT;
+
+
+var Main_Proxy        = "PROXY PITC-Zscaler-ASPAC-Bangalore3PR.proxy.corporate.ge.com:80";
+
+spark-shell --jars kafka-tools-0.10.1.2.6.4.0-91.jar,kafka-streams-0.10.1.2.6.4.0-91.jar,kafka-clients-0.10.1.2.6.4.0-91.jar,kafka_2.11-0.10.1.2.6.4.0-91.jar,kafka_2.10-0.10.1.2.6.4.0-91-sources.jar
+
+
+

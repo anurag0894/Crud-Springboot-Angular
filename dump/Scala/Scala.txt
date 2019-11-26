@@ -1,0 +1,765 @@
+rc4-hmac---protocol works well with talend for kerberos
+
+__________________________________________________________________________________
+
+Scala.collection.mutable package contains all the mutable collections. You can add, remove and update data while using this package.
+
+scala> val map = scala.collection.mutable.HashMap.empty[Int,String]
+map: scala.collection.mutable.HashMap[Int,String] = Map()
+scala> map += (1 -> "make a web site")
+res42: map.type = Map(1 -> make a web site)
+scala> map += (3 -> "profit!")
+res43: map.type = Map(1 -> make a web site, 3 -> profit!)
+scala> map(1)
+res44: String = make a web site
+scala> map contains 2
+res46: Boolean = false
+__________________________________________________________________________________
+
+OOPS aproach//for saving it as .scala extension
+
+object ScalaExample{  
+    def main(args:Array[String]){  
+        println "Hello Scala"  
+    }  
+}  
+
+This file is saved with the name ScalaExample.scala.
+
+Command to compile this code is: scalac ScalaExample.scala
+
+Command to execute the compiled code is: scala ScalaExample
+__________________________________________________________________________________
+
+functional approach
+
+def scalaExample{  
+    println("Hello Scala")  
+}
+
+
+__________________________________________________________________________________
+
+val immutable,
+var muttable
+
+__________________________________________________________________________________
+
+var number:Int = 85 
+
+ if(number % 2==0)
+     | {
+     | println("hi")
+     | }else    //don't hit enter after },otherwise it will come out of if have } else at the same line
+     | {
+     | prinln("bye")
+     | }
+
+__________________________________________________________________________________
+
+
+var number:Int = 85  
+if(number>=0 && number<50){  
+    println ("fail")  
+}  else if(number>=50 && number<60){  
+    println("D Grade")  
+}  else if(number>=60 && number<70){  
+    println("C Grade")  
+}  else if(number>=70 && number<80){  
+    println("B Grade")  
+}  else if(number>=80 && number<90){  
+    println("A Grade")  
+}  else if(number>=90 && number<=100){  
+    println("A+ Grade")  
+}  else println ("Invalid")  
+	 
+__________________________________________________________________________________
+
+object MainObject {  
+   def main(args: Array[String]) {  
+      val result = checkIt(-10)  
+      println (result)  
+   }  
+    def checkIt (a:Int)  =  if (a >= 0) 1 else -1    // Passing a if expression value to function  
+}  
+
+-1
+
+__________________________________________________________________________________
+
+pattern matching
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        var result = search ("Hello")  
+        print(result)  
+    }  
+    def search (a:Any):Any = a match{  
+        case 1  => println("One")  
+        case "Two" => println("Two")  
+        case "Hello" => println("Hello")  
+        case _ => println("No")  
+              
+        }  
+}  
+
+__________________________________________________________________________________
+
+for loop (to keyword) 
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        for( a <- 1 to 10 ){  
+         println(a);  
+      }  
+   }  
+}
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+for loop (until keyword)
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        for( a <- 1 until 10 ){  
+         println(a);  
+      }  
+   }  
+}  
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+def main(args: Array[String]) {  
+        for( a <- 1 to 10 if a%2==0 ){  
+         println(a);  
+      }  
+   }  
+}  
+
+
+2
+4
+6
+8
+10
+__________________________________________________________________________________
+
+
+scala> var list=List(1 to 10)
+list: List[scala.collection.immutable.Range.Inclusive] = List(Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))  (it is a range)
+
+
+scala> for(a<-list)
+     | {
+     | println(a)}
+Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+scala>  var list = List(1,2,3,4,5,6,7,8,9)
+list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)   (it is list of int)
+
+scala> for(a<-list)
+     |      | {
+     |      | println(a)}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+__________________________________________________________________________________
+
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        var list = List(1,2,3,4,5,6,7,8,9)  // Creating a list  
+        list.foreach{  
+            println     // Print each element  
+        }  
+        list.foreach(print)  
+        println  
+        list.foreach((element:Int)=>print(element+" "))      // Explicitly mentioning type of elements  
+   }  
+}  
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+123456789
+1 2 3 4 5 6 7 8 9
+
+
+__________________________________________________________________________________
+
+by for skipping iteration
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        for(i<-1 to 10 by 2){  
+            println(i)  
+        }  
+   }  
+}  
+
+1
+3
+5
+7
+9
+
+__________________________________________________________________________________
+
+Scala comments
+
+//--single line
+
+/*
+
+*/--multiline comments
+
+
+__________________________________________________________________________________
+
+Scala Functions
+
+Declaration
+
+def functionName(parameters : typeofparameters) : returntypeoffunction = {  
+// statements to be executed  
+}  
+
+In the above syntax, = (equal) operator is looking strange but don't worry scala has defined it as:
+
+You can create function with or without = (equal) operator. If you use it, function will return value. If you don't use it, your function will not return anything and will work like subroutine.
+
+Scala functions don?t use return statement. Return type infers by compiler from the last expression or statement present in the function.
+
+1.without =
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        functionExample()           // Calling function  
+    }  
+    def functionExample()  {        // Defining a function  
+          println("This is a simple function")  
+    }  
+}  
+
+This is a simple function
+
+
+2.with =
+
+object MainObject {  
+   def main(args: Array[String]) {  
+        var result = functionExample()          // Calling function  
+        println(result)  
+    }  
+    def functionExample() = {       // Defining a function  
+          var a = 10  
+          a  
+    }  
+}  
+
+10
+
+
+3.Parameterized Functions
+
+object MainObject {  
+   def main(args: Array[String]) = {  
+        functionExample(10,20)   
+    }  
+    def functionExample(a:Int, b:Int) = {  
+          var c = a+b  
+          println(c)  
+    }  
+}  
+
+30
+
+4.Recursive function
+
+object MainObject {  
+   def main(args: Array[String]) = {  
+        var result = functionExample(15,2)   
+        println(result)  
+    }  
+    def functionExample(a:Int, b:Int):Int = {  
+        if(b == 0)          // Base condition  
+         0  
+        else  
+         a+functionExample(a,b-1)  
+    }  
+}  
+
+30
+
+5.Function Named parameters
+
+object MainObject {  
+   def main(args: Array[String]) = {  
+        var result1 = functionExample(a = 15, b = 2)    // Parameters names are passed during call  
+        var result2 = functionExample(b = 15, a = 2)    // Parameters order have changed during call  
+        var result3 = functionExample(15)             // Only values are passed during call  
+        println(result1+"\n"+result2+"\n"+result3)  
+    }  
+    def functionExample(a:Int=0, b:Int=0):Int = {  
+        a+b  
+    }  
+}  
+
+17
+17
+15
+
+
+6.Higher order functions
+
+object MainObject {  
+   def main(args: Array[String]) = {  
+     functionExample(25, multiplyBy2)                   // Passing a function as parameter  
+    }  
+    def functionExample(a:Int, f:Int=>AnyVal):Unit = {  
+        println(f(a))                                   // Calling that function   
+    }  
+    def multiplyBy2(a:Int):Int = {  
+        a*2  
+    }  
+}  
+
+vote 91. =>(rocket) is syntactic sugar for creating instances of functions. Recall that every function in scala is an instance of a class.
+ For example, the type Int => String , is equivalent to the type Function1[Int,String]
+ i.e. a function that takes an argument of type Int and returns a String 
+ 
+7.Anonymous Function
+ 
+ object MainObject {  
+   def main(args: Array[String]) = {  
+     var result1 = (a:Int, b:Int) => a+b        // Anonymous function by using => (rocket)  
+     var result2 = (_:Int)+(_:Int)              // Anonymous function by using _ (underscore) wild card  
+     println(result1(10,10))  
+     println(result2(10,10))  
+    }  
+}  
+
+8.Function with Variable Length Parameters
+
+def add(args: Int*) = {  
+    var sum = 0;  
+    for(a <- args) sum+=a  
+    sum  
+}  
+var sum = add(1,2,3,4,5,6,7,8,9);  
+println(sum);  ---45
+
+__________________________________________________________________________________
+
+1.
+class Student(id:Int, name:String){  
+    def getRecord(){  
+        println(id+" "+name);  
+    }  
+}  
+  
+object MainObject{  
+    def main(args: Array[String]){  
+        var student1 = new Student(101,"Raju");  
+        var student2 = new Student(102,"Martin");  
+        student1.getRecord();  
+        student2.getRecord();  
+    }  
+}  
+
+2.
+
+Scala Companion Object
+
+In scala, when you have a class with same name as singleton object, it is called companion class and the singleton object is called companion object.
+
+The companion class and its companion object both must be defined in the same source file.
+
+
+class ComapanionClass{  
+    def hello(){  
+        println("Hello, this is Companion Class.")  
+    }  
+}  
+object CompanoinObject{  
+    def main(args:Array[String]){  
+        new ComapanionClass().hello()  
+        println("And this is Companion Object.")  
+    }  
+}  
+
+__________________________________________________________________________________
+1.
+
+Scala Case Class Example
+
+
+case class CaseClass(a:Int, b:Int) 
+
+
+object MainObject{  
+    def main(args:Array[String]){  
+        var c =  CaseClass(10,10)       // Creating object of case class  
+        println("a = "+c.a)               // Accessing elements of case class  
+        println("b = "+c.b)  
+    }  
+}
+
+2.
+
+trait SuperTrait  
+case class CaseClass1(a:Int,b:Int) extends SuperTrait  
+case class CaseClass2(a:Int) extends SuperTrait         // Case class  
+case object CaseObject extends SuperTrait               // Case object  
+object MainObject{  
+    def main(args:Array[String]){  
+        callCase(CaseClass1(10,10))  
+        callCase(CaseClass2(10))  
+        callCase(CaseObject)  
+    }  
+    def callCase(f:SuperTrait) = f match{  
+        case CaseClass1(f,g)=>println("a = "+f+" b ="+g)  
+        case CaseClass2(f)=>println("a = "+f)  
+        case CaseObject=>println("No Argument")  
+    }  
+}  
+
+__________________________________________________________________________________
+
+1. Scala Primary Constructor
+
+Scala provides a concept of primary constructor with the definition of class. You don't need to define explicitly constructor if 
+your code has only one constructor. It helps to optimize code. You can create primary constructor with zero or more parameters.
+
+class Student(id:Int, name:String){  
+    def showDetails(){  
+        println(id+" "+name);  
+    }  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        var s = new Student(101,"Rama");  
+        s.showDetails()  
+    }  
+}  
+
+
+2. Scala Secondary (auxiliary) Constructor
+
+//when you create object...this pointer gets fire...then this passes values to the constructor
+
+You can create any number of auxiliary constructors in a class. You must call primary constructor from inside the auxiliary constructor. 
+this keyword is used to call constructor from other constructor. When calling other constructor make it first line in your constructor.
+
+class Student(id:Int, name:String){  
+    var age:Int = 0  
+    def showDetails(){  
+        println(id+" "+name+" "+age)  
+    }  
+    def this(id:Int, name:String,age:Int){  
+        this(id,name)       // Calling primary constructor, and it is first line  
+        this.age = age  
+    }  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        var s = new Student(101,"Rama",20);  //you mayn't pass 20...default is 0
+        s.showDetails()  
+    }  
+}  
+
+3. Scala Example: Constructor Overloading
+
+
+class Student(id:Int){  
+    def this(id:Int, name:String)={  
+        this(id)  
+        println(id+" "+name)  
+    }  
+    println(id)  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        new Student(101)  
+        new Student(100,"India")  
+    }  
+}  
+
+
+__________________________________________________________________________________
+
+function override
+
+class Bank{    
+        def getRateOfInterest()={  
+            0  
+        }    
+    }    
+        
+    class SBI extends Bank{    
+        override def getRateOfInterest()={  
+         8  
+        }    
+    }    
+        
+    class ICICI extends Bank{    
+        override def getRateOfInterest()={  
+            7  
+        }    
+    }    
+      
+    class AXIS extends Bank{    
+        override def getRateOfInterest()={  
+            9  
+        }    
+    }    
+        
+    object MainObject{    
+        def main(args:Array[String]){    
+            var s=new SBI();    
+            var i=new ICICI();    
+            var a=new AXIS();    
+            println("SBI Rate of Interest: "+s.getRateOfInterest());    
+            println("ICICI Rate of Interest: "+i.getRateOfInterest());    
+            println("AXIS Rate of Interest: "+a.getRateOfInterest());    
+        }    
+    }    
+Output:
+
+SBI Rate of Interest: 8
+ICICI Rate of Interest: 7
+AXIS Rate of Interest: 9
+
+
+__________________________________________________________________________________
+
+1.Single D array
+
+class ArrayExample{  
+    var arr = new Array[Int](5)         // Creating single dimensional array  
+    def show(){  
+        for(a<-arr){                      // Traversing array elements  
+            println(a)  
+        }  
+        println("Third Element before assignment = "+ arr(2))        // Accessing elements by using index  
+        arr(2) = 10                                                          // Assigning new element at 2 index  
+        println("Third Element after assignment = "+ arr(2))  
+    }  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        var a = new ArrayExample()  
+        a.show()  
+    }  
+}  
+Output:
+
+0
+0
+0
+0
+0
+Third Element before assignment = 0
+Third Element after assignment = 10
+
+  var arr = Array(1,2,3,4,5) 
+  
+  
+2.Scala Passing Array into Function
+
+
+class ArrayExample{  
+    def show(arr:Array[Int]){  
+        for(a<-arr)                // Traversing array elements  
+            println(a)  
+        println("Third Element = "+ arr(2))        // Accessing elements by using index  
+    }  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        var arr = Array(1,2,3,4,5,6)    // creating single dimensional array  
+        var a = new ArrayExample()  
+        a.show(arr)                     // passing array as an argument in the function  
+    }  
+}  
+
+1
+2
+3
+4
+5
+6
+Third Element = 3
+
+3.foreach
+
+class ArrayExample{  
+    var arr = Array(1,2,3,4,5)      // Creating single dimensional array  
+    arr.foreach((element:Int)=>println(element))       // Iterating by using foreach loop  
+}  
+  
+object MainObject{  
+    def main(args:Array[String]){  
+        new ArrayExample()  
+    }  
+}  
+
+  
+
+FROM THE BOOK
+
+1. column operation
+
+import org.apache.spark.sql.functions.expr
+
+expr("(((somecol + 5)*200)-6) < otherCol")
+
+2. Most convenient way
+
+df.selectExpr("avg(count)","count(distinct(DEST_COUNTRY_NAME))").show(2)
+
+3. Complex queries(=== and =!= in scala)
+
+Normal SQL
+
+Select UnitPrice, (StockCode = 'DOT' and
+                     (UnitPrice>600 OR instr(Description,"POSTAGE") >=1 )) as isExpensive
+from dfTable
+where(StockCode = 'DOT' and
+                     (UnitPrice>600 OR instr(Description,"POSTAGE") >=1 ))
+Scala
+
+val DOTCodeFilter = col("StockCode") === "DOT" 
+val priceFilter = col("UnitPrice") > 600
+val descripFilter = col("Description").contains("POSTAGE")
+df.withColumn("isExpensive",DOTCodeFilter.and(priceFilter.or(descripFilter)))
+  .where(isExpensive)
+  .select("unitPrice","isExpensive").show(5)
+  
+DATASETS
+
+1. JAVA ENCODERS(Dataset<Row>)
+
+import org.apache.spark.sql.Encoders;
+
+public class Flight implements Serializable{
+String DEST_COUNTRY_NAME;
+Long DEST_COUNTRY_CODE;
+}
+
+Dataset<Flight> flights=spark.read
+                        .parquet("/data/flight/2019-summary.parquet/")
+						.as(Encoders.bean(Flight.class));
+						
+2. CASE Class(Dataset[T])
+
+case class Flight(DEST_COUNTRY_NAME:String,DEST_COUNTRY_CODE:BigInt)
+
+val flightDF=spark.read
+             .parquet("/data/flight/2019-summary.parquet/")
+			.as[Flight];				
+
+
+RDDs(Used in rare case, when custom partitioning of data is required)
+
+2 Sets of Low level APIs
+
+-- RDD(for manipulating distributed data)
+-- Broadcast variables and accumulators(distributed shared variables)
+
+Example
+
+from a local collection
+To create an RDD from a collection you will need to use the parallelize method on a sparkContext.
+This will turn a single node collection into a parallel collection.
+When creating this parallel collection,you can also explicitly give no of partitions to distribute the array.
+
+val myCollection="Spark The Definitive Guide : Big Data Processing Made Simple".split(" ")
+val words=spark.sparkContext.parallelize(myCollection,2)
+
+Map
+
+val word2=words.map(word => (word,word(0),word.startsWith("S")))
+
+Tuple of
+
+"Spark","S","true"
+"Simple","S","true"
+
+flatMap(extension to map.. each row from map will return multiple row)
+
+words.flatMap(word => word.toSeq).take(5)  [S,P,A,R,K]
+
+
+HADOOP
+
+Scheduler Options
+
+1. FIFO scheduler
+2. Capacity scheduler
+3. Fair scheduler
+
+Difference between capacity scheduler and fair scheduler ?
+
+
+Capacity scheduler(Used in case of multiple organization,capacity guarantees)
+
+1.> Node Label Partition
+2.> Container resizing
+
+Fair Scheduler(Fair sharing of resources within each organization)
+
+1.> On-demand queue creation
+
+
+
+
+
+
+
+					 
+
+
+
+
+

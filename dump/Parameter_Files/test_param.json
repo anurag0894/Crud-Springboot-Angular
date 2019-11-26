@@ -1,0 +1,313 @@
+{"SparkParameters":[
+   {
+	  "table": "cx_ids_sss",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others"
+       }
+   },
+   {
+	  "table": "iqp_produced_planning_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others"
+       }
+   },
+   {
+	  "table": "iqp_wip_ops_res_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others"
+       }
+   },
+   {
+	  "table": "iqp_rma_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports"
+       }
+   },
+   {
+	  "table": "iqp_rma_roch_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports"
+       }
+   },
+   {
+	  "table": "iqp_manufacturer_dim",
+	  "parameters": {
+	"executors": "1",
+	"cores": "5",
+	"driver_memory": "12g",
+	"executor_memory": "8g",
+	"location": "inv"
+       }
+   },
+   {
+	  "table": "iqp_common_stage",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_itemwarehouse_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "8g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_hmrc_rate_ref",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "10g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_order_history_ref",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "8g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_inv_rpt_stg",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "20g",
+	"executor_memory": "15g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_po_lines_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "20g",
+	"location": "fact"
+       }
+   },
+   {
+	  "table": "iqp_ap_payments_details_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "fact"
+       }
+   },
+   {
+	  "table": "iqp_quote_mgmt_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "fact"
+       }
+   },
+   {
+	  "table": "iqp_repairs_dim",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "quality"
+       }
+   },
+   {
+	  "table": "iqp_ato_item_cost_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "quality"
+       }
+   },
+   {
+	  "table": "iqp_enpp_program_report_cx",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "15g",
+	"location": "pa"
+       }
+   },
+   {
+	  "table": "iqp_project_player_dim",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "pa"
+       }
+   },
+   {
+	  "table": "iqp_project_draft_revenue_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa"
+       }
+   },
+   {
+	  "table": "iqp_project_draft_invoice_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa"
+       }
+   },
+   {
+	  "table": "iqp_pa_expenditure_items_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa"
+       }
+   },
+   {
+	  "table": "iqp_incidents_dim",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "quality"
+       }
+   },
+   {
+	  "table": "gl_daily_rates",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "dim"
+       }
+   },
+   {
+	  "table": "iqp_repairs_denorm_dim",
+	  "parameters": {
+	"executors": "1",
+	"cores": "5",
+	"driver_memory": "2g",
+	"executor_memory": "8g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "iqp_srvc_f_hrs_worked",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "iqp_srvc_sc_all_cases",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "sales_agg_update",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "10g",
+	"executor_memory": "20g",
+	"location": "inv"
+       }
+   },
+   {
+	  "table": "iqp_srvc_d_employee_utlztn",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "10g",
+	"executor_memory": "20g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "iqp_srvc_d_employee_scauto",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "10g",
+	"executor_memory": "20g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "iqp_srvc_d_emp_sfdc",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "10g",
+	"executor_memory": "20g",
+	"location": "srvc_daily"
+       }
+   },
+   {
+	  "table": "readable_files",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "10g",
+	"executor_memory": "20g",
+	"location": "services"
+       }
+   }
+
+   ]}

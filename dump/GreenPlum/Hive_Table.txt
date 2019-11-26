@@ -1,0 +1,194 @@
+-- Function: al_gem_gs.iqp_hive_table_script_test(text)
+
+-- DROP FUNCTION al_gem_gs.iqp_hive_table_script_test(text);
+
+CREATE OR REPLACE FUNCTION al_gem_gs.iqp_hive_table_script_test(p_type text)
+  RETURNS void AS
+$BODY$
+DECLARE
+    tab_rec RECORD;
+    col_rec RECORD;
+    pc_statement text := '';  -- for display message
+    l_data_type text;
+    first_time boolean;
+    l_location text := '/tmp/iqp/external_files/';   -- HDFS location for external files
+    l_gphdfs   text := '(gphdfs://alphd1dx001:8020/tmp/iqp/external_files/)';
+BEGIN
+
+    if (p_type = 'GP-DROP') or (p_type = 'ALL') then
+		RAISE NOTICE '--';
+		RAISE NOTICE '--Scripts for GreenPlum External Table Creation';
+		RAISE NOTICE '--';
+		pc_statement := '';
+
+		FOR tab_rec IN
+		  select schema_name, target_table_name
+		  from al_gem_gs.gs_iqp_master_table
+		  where coalesce(upper(enabled_flag),'Y') = 'Y'
+		  order by 1,2
+		LOOP
+		   pc_statement := 'DROP EXTERNAL TABLE al_gem_gs.'||tab_rec.target_table_name;
+		   RAISE NOTICE '%',pc_statement;
+		END LOOP;
+    end if;
+
+
+    if (p_type = 'GP-CREATE') or (p_type = 'ALL') then
+		RAISE NOTICE '--';
+		RAISE NOTICE '--Scripts for GreenPlum External Table Creation';
+		RAISE NOTICE '--';
+		pc_statement := '';
+
+		FOR tab_rec IN
+		  select schema_name, table_name, target_table_name
+		  from al_gem_gs.gs_iqp_master_table
+		  where coalesce(upper(enabled_flag),'Y') = 'Y' and table_name = 'xla_ae_lines'
+		  order by 1
+		LOOP
+    pc_statement := 'CREATE WRITABLE EXTERNAL TABLE al_gem_gs.'||tab_rec.target_table_name||'  (LIKE '||
+                     tab_rec.schema_name||'.'||tab_rec.table_name||
+                    ') LOCATION('''||l_gphdfs||tab_rec.target_table_name||''''||
+                    E') FORMAT ''text'' (delimiter '||E''||E'E\'\\u0011\''||E''||E' null '''||
+                    E'\\'||E'\\'||'N'' escape '''||E'\\'||E'\\'||''' ) ENCODING ''UTF8'';';
+
+		   RAISE NOTICE '%',pc_statement;
+		   pc_statement := 'GRANT ALL ON TABLE al_gem_gs.'||tab_rec.target_table_name||' TO ec_data_al_gem_gs_updater;';
+		   RAISE NOTICE '%',pc_statement;
+		   pc_statement := 'GRANT SELECT ON TABLE al_gem_gs.'||tab_rec.target_table_name||' TO ec_data_al_gem_gs_looker;';
+		   RAISE NOTICE '%',pc_statement;
+		END LOOP;
+    end if;
+
+
+    if (p_type = 'HIVE-EXTERNAL') or (p_type = 'ALL') then
+		RAISE NOTICE '--';
+		RAISE NOTICE '--Scripts for Hive External Table';
+		RAISE NOTICE '--';
+		pc_statement := '';
+
+		FOR tab_rec IN
+		  select schema_name, table_name, target_table_name
+		  from al_gem_gs.gs_iqp_master_table
+		  where coalesce(upper(enabled_flag),'Y') = 'Y' and table_name = 'xla_ae_lines'
+		  order by 1
+		LOOP
+
+		   first_time := true;
+		   l_data_type := null;
+
+		   FOR col_rec IN
+			select column_name, data_type, character_maximum_length, numeric_precision, datetime_precision, udt_name
+			from information_schema.columns
+			where table_schema = tab_rec.schema_name
+			and table_name = tab_rec.table_name
+
+
+
+			order by ordinal_position
+		   LOOP
+
+			  if first_time then
+				 pc_statement := pc_statement||' CREATE EXTERNAL TABLE g00103.'||tab_rec.target_table_name||' ( ';
+				 first_time := false;
+			  end if;
+
+			  if col_rec.udt_name = 'varchar' then
+				  l_data_type := col_rec.udt_name||'('||col_rec.character_maximum_length||')';
+			  elseif col_rec.udt_name = 'numeric' then
+				   l_data_type := 'double';
+			  elseif col_rec.udt_name = 'int4' then
+				   l_data_type := 'int';
+			  elseif col_rec.udt_name = 'bytea' then
+				   l_data_type := 'string';
+			  elseif col_rec.udt_name = 'text' then
+				   l_data_type := 'string';
+			  elsif col_rec.udt_name = 'bpchar' then
+				  l_data_type := 'char'||'('||col_rec.character_maximum_length||')';
+			  else
+				  l_data_type := col_rec.udt_name;
+			  end if;
+
+			  pc_statement := pc_statement||' '||col_rec.column_name||' '||l_data_type||', ';
+
+		   END LOOP;
+                    pc_statement := substring(pc_statement from 1 for (length(pc_statement) - 2));
+		   
+
+        pc_statement := pc_statement||' ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ''\\u0011'' LOCATION '''||
+                                                        l_location||tab_rec.target_table_name||''''||';';
+		                   --' TBLPROPERTIES(''serialization.null.format''='''') ;';
+
+		   RAISE NOTICE '%',pc_statement;
+		   pc_statement := '';
+		END LOOP;
+	end if;
+
+
+    if (p_type = 'HIVE-INTERNAL') or (p_type = 'ALL') then
+		RAISE NOTICE '--';
+		RAISE NOTICE '--Scripts for Hive Internal Table';
+		RAISE NOTICE '--';
+		pc_statement := '';
+
+		FOR tab_rec IN
+		  select schema_name, table_name
+		  from al_gem_gs.gs_iqp_master_table
+		  where coalesce(upper(enabled_flag),'Y') = 'Y' and lower(table_name) = 'xla_ae_lines'
+		  order by 1
+		LOOP
+
+		   first_time := true;
+		   l_data_type := null;
+
+		   FOR col_rec IN
+			select column_name, data_type, character_maximum_length, numeric_precision, datetime_precision, udt_name
+			from information_schema.columns
+			where table_schema = tab_rec.schema_name
+			and table_name = tab_rec.table_name
+			order by ordinal_position
+		   LOOP
+
+			  if first_time then
+				 pc_statement := pc_statement||' CREATE TABLE '||tab_rec.table_name||' ( ';
+				 first_time := false;
+			  end if;
+
+			  if col_rec.udt_name = 'varchar' then
+				  l_data_type := col_rec.udt_name||'('||col_rec.character_maximum_length||')';
+			  elseif col_rec.udt_name = 'numeric' then
+				   l_data_type := 'double';
+			  elseif col_rec.udt_name = 'int4' then
+				   l_data_type := 'int';
+			  elseif col_rec.udt_name = 'bytea' then
+				   l_data_type := 'string';
+			  elseif col_rec.udt_name = 'text' then
+				   l_data_type := 'string';
+			  elsif col_rec.udt_name = 'bpchar' then
+				  l_data_type := 'char'||'('||col_rec.character_maximum_length||')';
+			  else
+				  l_data_type := col_rec.udt_name;
+			  end if;
+
+			  pc_statement := pc_statement||' '||col_rec.column_name||' '||l_data_type||', ';
+
+		   END LOOP;
+
+		   pc_statement := substring(pc_statement from 1 for (length(pc_statement) - 2));
+
+		   pc_statement := pc_statement||' ) STORED AS ORC;';
+
+		   RAISE NOTICE '%',pc_statement;
+		   pc_statement := '';
+		END LOOP;
+	end if;
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION al_gem_gs.iqp_hive_table_script_test(text)
+  OWNER TO "502749466";
+GRANT EXECUTE ON FUNCTION al_gem_gs.iqp_hive_table_script_test(text) TO public;
+GRANT EXECUTE ON FUNCTION al_gem_gs.iqp_hive_table_script_test(text) TO "502749466";
+GRANT EXECUTE ON FUNCTION al_gem_gs.iqp_hive_table_script_test(text) TO ec_data_al_gem_gs_updater;
+GRANT EXECUTE ON FUNCTION al_gem_gs.iqp_hive_table_script_test(text) TO ec_data_al_gem_gs_looker;

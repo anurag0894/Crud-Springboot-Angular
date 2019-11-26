@@ -1,0 +1,1 @@
+To compile the code for time being copy spark-assembly-1.6.2.2.5.0.2-3-hadoop2.7.3.2.5.0.2-3.jar from /usr/hdp/current/spark-client/lib to ./lib/

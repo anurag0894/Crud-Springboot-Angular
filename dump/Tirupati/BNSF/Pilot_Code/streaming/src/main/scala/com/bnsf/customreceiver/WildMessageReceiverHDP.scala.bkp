@@ -1,0 +1,583 @@
+package com.bnsf.customreceiver
+
+import com.bnsf.model.ioc._
+import com.bnsf.model.ioc.Message
+import com.bnsf.model.ioc.Header
+
+import java.util.Hashtable
+//remove if not needed
+import scala.collection.JavaConversions._
+import scala.collection.mutable.ArrayBuffer
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
+
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.{Seconds, Duration, StreamingContext}
+import org.apache.spark.streaming.receiver.Receiver
+import org.apache.spark.streaming.dstream._
+
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SaveMode
+import org.apache.spark.sql._
+
+import javax.jms._
+import javax.naming.Context
+import javax.naming.InitialContext
+import javax.naming.NamingException
+
+import java.io.File
+import java.nio.charset.Charset
+
+import java.util.Calendar
+import java.text.SimpleDateFormat
+
+//import com.google.common.io.Files
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.InputStream
+import java.io.IOException
+
+import java.net.ConnectException
+import java.net.Socket
+import java.nio.charset.StandardCharsets
+import java.util.regex.Pattern
+
+import javax.jms._
+
+import org.apache.spark.sql.execution.datasources.hbase._
+import org.apache.hadoop.hbase.HBaseConfiguration
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.hbase.client._
+import org.apache.hadoop.fs.Path
+import org.apache.hadoop.security.UserGroupInformation
+import java.security.PrivilegedExceptionAction
+import org.apache.hadoop.hbase.client.ConnectionFactory
+
+// import scala.util.Properties
+import java.util.{Hashtable, Properties}
+
+object WildMessageReceiverHDP {
+
+  private val SPACE = Pattern.compile(" ")
+
+  def getDateInHH() : String = {
+
+    val now = Calendar.getInstance().getTime()
+    val minuteFormat = new SimpleDateFormat("yyyyMMdd-HH")
+    val currDateHr = minuteFormat.format(now)
+    currDateHr
+  }
+
+  def buildMsgList( iterator: Iterator[String] ) : Iterator[Detector_Message] = {
+
+  // mapper object created on each executor node
+  val mapper = new ObjectMapper() // with ScalaObjectMapper
+  mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+  mapper.registerModule(DefaultScalaModule)
+
+  val records = iterator.toList
+  val result = records.map( record => {
+         
+     try {
+
+       val message : JsonNode = mapper.readTree(record).path("header")
+       // if (message != null){
+     
+         //From Header get MsgId and Detector type
+         val msgId : Long = message.path("messageId").asLong()
+
+         val msgType : String = message.path("type").asText()
+
+         Detector_Message(msgId, msgType, record)
+       // }
+
+     } catch {
+         case ex: Exception => { 
+           println("DBG in buildMsgList Caught Exception")
+           ex.printStackTrace()
+           throw ex
+         }
+     }
+  }).iterator //End map
+
+  result
+
+  }
+
+  def WriteToHDFS(msgRDD: ReceiverInputDStream[String], hdfsPath: String ) : Unit = {
+      println("DBG: in WriteToHDFS")
+
+      msgRDD.foreachRDD { rdd => 
+
+        // Get the singleton instance of SQLContext
+        val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
+        import sqlContext.implicits._
+
+        val df = rdd.toDF
+        val currDateHr = getDateInHH()
+
+        println("DBG: in WriteToHDFS " + hdfsPath + currDateHr)
+
+	//Path includes trailing slash
+        df.write.format("text").mode(SaveMode.Append).save(hdfsPath + currDateHr)
+
+      }
+  }
+
+  def WriteToHBase(msgRDD: ReceiverInputDStream[String], propFileName: String) : Unit = {
+
+       println("DBG: in WriteToHBase")
+       msgRDD.foreachRDD { rdd => 
+
+       val inputStream: InputStream = this.getClass.getResourceAsStream(propFileName)
+
+       val appProp = new Properties()
+
+       appProp.load(inputStream)
+
+       val duration: Long = appProp.getProperty("receiver.batch.duration").toLong
+       val checkpointPath = appProp.getProperty("receiver.checkpoint.dir")
+       val hdfsPath = appProp.getProperty("receiver.hdfs.msgs.dir")
+       val principal = appProp.getProperty("receiver.hbase.principal")
+       val keyTab = appProp.getProperty("receiver.hbase.keyTab")
+       val hbaseTbl = appProp.getProperty("receiver.hbase.table")
+       val zkPort = appProp.getProperty("hbase.zookeeper.property.clientPort")
+       val zkQuorum = appProp.getProperty("hbase.zookeeper.quorum")
+
+       // println("DBG in WriteToHBase hbaseTbl=" + hbaseTbl + "princ=" + principal + "#keyTab=" + keyTab + "#hdfsPath=" + hdfsPath + "#checkpointPath=" + checkpointPath + "#duration=" + duration)
+
+       val conf = HBaseConfiguration.create()
+       // conf.addResource(new Path("/etc/hbase/conf/hbase-site.xml"))
+       conf.addResource(new Path("/hbase-site.xml"))
+       conf.addResource(new Path("/etc/hadoop/conf/core-site.xml"))
+       conf.set("hbase.client.keyvalue.maxsize", "20971520")
+       conf.set("hbase.rpc.controllerfactory.class","org.apache.hadoop.hbase.ipc.RpcControllerFactory")
+       conf.set("hbase.security.authentication", "kerberos")
+       conf.set("hadoop.security.authentication", "kerberos")
+       conf.set("java.security.krb5.conf", "/etc/krb5.conf")
+
+       conf.set("hbase.zookeeper.property.clientPort", zkPort )
+       conf.set("hbase.zookeeper.quorum", zkQuorum)
+
+       // sparkConf.set("java.security.krb5.conf", "/etc/krb5.conf")
+   
+       UserGroupInformation.setConfiguration(conf)
+   
+       var connection : org.apache.hadoop.hbase.client.Connection = null
+   
+       // val ugi=UserGroupInformation.loginUserFromKeytab(principal, keyTab)
+       val ugi=UserGroupInformation.loginUserFromKeytabAndReturnUGI(principal, keyTab)
+       UserGroupInformation.setLoginUser(ugi)
+   
+       ugi.doAs(new PrivilegedExceptionAction[Unit] {
+         def run: Unit = {
+
+   	connection = org.apache.hadoop.hbase.client.ConnectionFactory.createConnection(conf)
+           // println("DBG: Past run connection init..")
+         }
+       })
+   
+       // Get the singleton instance of SQLContext
+       val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
+       import sqlContext.implicits._
+   
+       val tbl = """${"%s".format(hbaseTbl)}"""
+       var cat = s"""{
+                   |"table":{"name": "TBL" },
+                   |"rowkey":"key",
+                   |"columns":{
+                   |"col0":{"cf":"rowkey", "col":"key", "type":"string"},
+                   |"col1":{"cf":"hdr", "col":"detrTyp", "type":"string"},
+                   |"col2":{"cf":"dtl", "col":"msg", "type":"string"},
+                   |"col3":{"cf":"status", "col":"stat_cd", "type":"string"}
+                   |}
+                   |}""".stripMargin
+       // println("DBG BEF REPLACE tbl=" + hbaseTbl + "#tbl=" + tbl + "#cat=" + cat)
+       cat = cat.replaceFirst("TBL", hbaseTbl)
+       // println("DB AFT REPLACE tbl=" + hbaseTbl + "#tbl=" + tbl + "#cat=" + cat)
+   
+       def withCatalog(cat: String): DataFrame = {
+         sqlContext
+           .read
+           .options(Map(HBaseTableCatalog.tableCatalog->cat))
+           .format("org.apache.spark.sql.execution.datasources.hbase")
+           .load()
+       }
+/*
+       val result = rdd.map( record => {
+
+         // mapper object created on each executor node
+         val mapper = new ObjectMapper with ScalaObjectMapper
+         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+         mapper.registerModule(DefaultScalaModule)
+
+         try {
+            val message : JsonNode = mapper.readTree(record)
+        //    if (message != null){
+     
+              //From Header get MsgId and Detector type
+              val msgId : Long = message.path("messageId").asLong()
+
+              val msgType : String = message.path("type").asText()
+
+              Detector_Message(msgId, msgType, record)
+       //     }
+
+         } catch {
+            case ex: Exception => { 
+              println("DBG in buildMsgList Caught Exception")
+              ex.printStackTrace()
+              throw ex
+            }
+         }
+
+       })
+*/
+       val result = rdd.mapPartitions(buildMsgList)
+
+       // println("DBG: before parallelize write ..")
+
+       // for testing connection sharing only
+       result.toDF.write.options(
+         Map(HBaseTableCatalog.tableCatalog -> cat, HBaseTableCatalog.newTable -> "1"))
+         .format("org.apache.spark.sql.execution.datasources.hbase")
+         .save()
+       println("DBG: post Write ..")
+
+    }
+
+  }
+
+  def createContext(duration: Long, checkpointDirectory: String, hdfsPath: String, propFileName: String)
+    : StreamingContext = {
+
+    // If you do not see this printed, that means the StreamingContext has been loaded
+    // from the new checkpoint
+    println("Creating new context")
+    
+    val sparkConf = new SparkConf()
+
+    // Create the context with second batch size
+    val ssc = new StreamingContext(sparkConf, Seconds(duration))
+
+    try{
+
+      ssc.checkpoint(checkpointDirectory)
+      
+      val lines = ssc.receiverStream(new WildMessageReceiverHDP())
+      println(System.currentTimeMillis() + "DBG lines count = " + lines.count())
+
+      //hdfsPath = "/user/hdetladm/sprkstrm-out/"
+
+      WriteToHDFS(lines, hdfsPath)
+
+      WriteToHBase(lines, propFileName)
+
+      //Process algorithm
+      // processWILDAlgo(rdd)
+
+    } catch {
+      case ex: Exception => { 
+        println("DBG in createContext Caught Final Exception")
+        ex.printStackTrace()
+        throw ex
+      }
+    }
+    ssc
+  }
+  
+  var appProp : Properties = null
+  
+  def main(args: Array[String]) {
+    
+    try{
+
+      val propFileName = "/config/config.properties"
+      // SOP("In readProperties without params cfg file=" + propFileName)
+      
+      val inputStream: InputStream = this.getClass.getResourceAsStream(propFileName)
+      
+      appProp = new Properties()
+      
+      appProp.load(inputStream)
+      
+      val duration: Long = appProp.getProperty("receiver.batch.duration").toLong
+      val checkpointPath = appProp.getProperty("receiver.checkpoint.dir")
+      val hdfsPath = appProp.getProperty("receiver.hdfs.msgs.dir")
+      val principal = appProp.getProperty("receiver.hbase.principal")
+      val keyTab = appProp.getProperty("receiver.hbase.keyTab")
+      val hbaseTbl = appProp.getProperty("receiver.hbase.table")
+      println("DBG receiver.hbase.table=" + hbaseTbl + "princ=" + principal + "#keyTab=" + keyTab + "#hdfsPath=" + hdfsPath + "#checkpointPath=" + checkpointPath + "#duration=" + duration)
+      val ssc =  StreamingContext.getOrCreate(checkpointPath, () => createContext(duration, checkpointPath, hdfsPath, propFileName))
+        
+      ssc.start()
+      
+      ssc.awaitTermination()
+      
+      ssc.stop(true, true)
+    } catch {
+      case ex: Exception => { 
+        println("DBG in main Caught Final Exception")
+        ex.printStackTrace()
+        throw ex;
+      }
+    }
+      
+  }
+
+  def main1(args: Array[String]) {
+    val sparkConf = new SparkConf().setAppName("WildMessageReceiverHDP-2")
+    val ssc = new StreamingContext(sparkConf, Seconds(60))
+    val lines = ssc.receiverStream(new WildMessageReceiverHDP())
+    println(lines.toString)
+    lines.print()
+    ssc.start()
+    ssc.awaitTermination()
+  }
+
+  case class JMS_Message ( key: String, msg: String)
+
+  case class Detector_Message ( col0: Long, col1: String, col2: String, col3: String)
+
+  object Detector_Message {
+    def apply(col0: Long, col1: String, col2: String ): Detector_Message = {
+      Detector_Message(col0, col1, col2, "U")
+    }
+  }
+
+}
+// class WildMessageReceiverHDP(val propFileName: String) extends Receiver[String](StorageLevel.MEMORY_AND_DISK_2) {
+class WildMessageReceiverHDP extends Receiver[String](StorageLevel.MEMORY_AND_DISK_2) {
+  // StorageLevel.MEMORY_AND_DISK_SER
+
+  var foreignProviderFactory: String = null
+
+  var foreignProviderURL: String = null
+
+  var connectionFactoryName: String = null
+
+  var destinationName: String = null
+
+  var userName: String = null
+
+  var password: String = null
+
+  var iterations: Int = 1
+
+  var ctxForeign: Context = null
+
+  var usingLDAP: Boolean = false
+
+  var lookupName: String = _
+  var sparkProviderURL: String = null
+  var host: String = null
+  var port: Int = -1
+
+  var factory: javax.jms.ConnectionFactory = null
+  var destination: Destination = null
+  var appProp : Properties = null
+
+  val ctxtFactory = "provider.context.factory"
+  val providerURL = "provider.url"
+  val jndiCtxtLookup = "jndi.context.lookup"
+  val destName = "destination.name"
+  val username = "destination.username"
+  val passwd = "destination.password"
+
+  val initialized = init()
+
+  def init() {
+    // SOP("In init .. readProperties without params")
+    readProperties()
+  }
+
+  def readProperties() {
+
+   try {
+
+      val propFileName = "/config/config.properties"
+      // SOP("In readProperties without params cfg file=" + propFileName)
+
+      val inputStream: InputStream = this.getClass.getResourceAsStream(propFileName)
+
+      appProp = new Properties()
+
+      appProp.load(inputStream)
+
+      foreignProviderFactory = appProp.getProperty(ctxtFactory)
+      foreignProviderURL = appProp.getProperty(providerURL)
+      connectionFactoryName = appProp.getProperty(jndiCtxtLookup)
+
+      destinationName = appProp.getProperty(destName)
+      userName = appProp.getProperty(username)
+      password = appProp.getProperty(passwd)
+
+      // SOP("In read properties")
+      // SOP("Factory=" + foreignProviderFactory + "#URL" + foreignProviderURL + "#JNDILookUp=" + connectionFactoryName + "#TOPIC_QUEUE=" + destinationName + "#Usr=" + userName + "#pass=" + password)
+    } catch {
+      case io: IOException => {
+         println("IOException reading Properties file..restarting" + io.getMessage)
+         io.printStackTrace()
+         throw io
+      }
+      case ex: Exception => {
+         println("Exception reading Properties file data..restarting" + ex.getMessage)
+         ex.printStackTrace()
+         throw ex
+      }
+
+    }
+
+  }
+
+    def createInitialContext (contextFactory: String,
+                              providerUrl: String,
+                              userName: String,
+                              password: String): Context = {
+      val env = new Hashtable[String, String]()
+      env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory)
+      env.put(Context.PROVIDER_URL, providerUrl)
+      env.put(Context.SECURITY_PRINCIPAL, userName)
+      env.put(Context.SECURITY_CREDENTIALS, password)
+      env.put(Context.REFERRAL, "throw")
+      val ctx = new InitialContext(env)
+      ctx
+    }
+
+    // init()
+
+    def receive() {
+
+      // readProperties(propFileName)
+      readProperties()
+
+      // SOP("Using JNDI to read objects from a foreign naming/directory service sample.")
+      // SOP("Using server: " + foreignProviderURL)
+
+      var factory : javax.jms.ConnectionFactory = null
+      var destination: Destination = null
+
+      if (foreignProviderURL.substring(0, 5) == "ldap:") usingLDAP = true
+
+      try {
+
+      // SOP("Factory=" + foreignProviderFactory + "#URL" + foreignProviderURL + "#JNDILookUp=" + connectionFactoryName + "#TOPIC_QUEUE=" + destinationName + "#Usr=" + userName + "#pass=" + password)
+
+        ctxForeign = createInitialContext(foreignProviderFactory, foreignProviderURL, userName, password)
+        ctxForeign.addToEnvironment(Context.OBJECT_FACTORIES, "com.tibco.tibjms.naming.TibjmsObjectFactory")
+        ctxForeign.addToEnvironment(Context.URL_PKG_PREFIXES, "com.tibco.tibjms.naming")
+
+//        for (i <- 0 until iterations) {
+          if (connectionFactoryName != null) {
+            lookupName = if ((usingLDAP)) "cn=" + connectionFactoryName else connectionFactoryName
+            factory = ctxForeign.lookup(lookupName).asInstanceOf[javax.jms.ConnectionFactory]
+            // SOP("looked up connection factory = " + factory)
+          }
+          if (destinationName != null) {
+            lookupName = if ((usingLDAP)) "cn=" + destinationName else destinationName
+            destination = ctxForeign.lookup(lookupName).asInstanceOf[Destination]
+            // SOP("looked up destination = " + destination)
+          }
+//        }
+
+        if (factory.isInstanceOf[javax.jms.ConnectionFactory] && destination != null) {
+          val ackMode = Session.CLIENT_ACKNOWLEDGE
+          val cf : javax.jms.ConnectionFactory = factory.asInstanceOf[javax.jms.ConnectionFactory]
+          val connectionRecv = cf.createConnection(userName, password)
+          val sessionRecv = connectionRecv.createSession()
+          val msgConsumer = sessionRecv.createConsumer(destination)
+
+          var msgList = ArrayBuffer[String]()
+          var cnt = 0
+
+          // SOP("Past consumer..")
+
+          connectionRecv.start()
+          while (true) {
+            // SOP("Waiting to receive messages.. ")
+            val msg = msgConsumer.receive()
+            if (msg == null)
+               stop("Stopped receiving messages from TIBCO..")
+
+            // SOP("Received msg.. proceeding to process..")
+//            if (msg == null) //break
+//              // SOP("Received message: " + msg.getStringProperty("text"))
+            // SOP("JMS Props@corrID=" + msg.getJMSCorrelationID() + "#msgID=" + msg.getJMSMessageID() + "#msgType=" + msg.getJMSType() + "#msgTimestamp=" + msg.getJMSTimestamp()) //                + "#="
+
+            val txt = msg.asInstanceOf[TextMessage]
+            //// SOP("Received message: " + txt.getText)
+
+            // store(txt.getText)
+            // store( JMS_Message (msg.getJMSCorrelationID(), txt.getText))
+            store(txt.getText)
+          }
+          connectionRecv.close()
+        }
+      } catch {
+        case e: JMSException => {
+          println("JMSException receiving data..restarting" + e.getMessage)
+          e.printStackTrace()
+          //restart("JMSException receiving data..restarting", e)
+          throw e
+        }
+        case e: NamingException => {
+          println("NamingException receiving data..restarting" + e.getMessage)
+          e.printStackTrace()
+          //restart("NamingException receiving data..restarting", e)
+          throw e
+        }
+        case t: Throwable => {
+          println( "General Error receiving data " + t.getMessage)
+          t.printStackTrace()
+          //restart( "General Error receiving data " + t.getMessage, t)
+          throw t
+        }
+
+      }
+    }
+
+    def onStart () {
+      new Thread() {
+
+        override def run () {
+          receive()
+        }
+      }
+        .start()
+    }
+
+    def onStop () {
+    }
+
+  }
+
+/*
+       val data : RDD[Detector_Message] = rdd.map (record => {
+
+       val objectMapper = new ObjectMapper()
+
+         // val message : com.bnsf.model.ioc.Message = objectMapper.readValue(record, classOf[com.bnsf.model.ioc.Message])
+         val message : JsonNode = objectMapper.readTree(record)
+
+         if (message != null){
+     
+	   //From Header get MsgId and Detector type
+           val msgId : Long = message.path("messageId").asText()
+
+           val msgType : Long = message.path("type").asText()
+
+           Detector_Message(msgId, msgType, record)
+
+         }
+
+       })
+*/   

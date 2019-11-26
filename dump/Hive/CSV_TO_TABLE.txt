@@ -1,0 +1,12 @@
+CREATE  TABLE g00103.f_category_mapping(
+ ORGANIZATION_CODE	BIGINT,
+FUNCTIONAL_NAME	    VARCHAR(50),
+CATEGORY_SET_NAME	VARCHAR(50),
+TARGET_COLUMN_NAME	VARCHAR(50),
+SOURCE_COLUMN_NAME  VARCHAR(50)
+)
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+tblproperties ("skip.header.line.count"="1");
+
+LOAD DATA [LOCAL] INPATH '/apps/hive/warehouse/f_category_mapping.csv' OVERWRITE INTO TABLE g00103.f_category_mapping;

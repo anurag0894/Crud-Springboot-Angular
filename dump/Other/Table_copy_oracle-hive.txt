@@ -1,0 +1,26 @@
+1> /bin/spark-shell  --master yarn --num-executors 4 --driver-memory 30g  --executor-memory 30g --executor-cores 5 --conf spark.scheduler.mode=FAIR  --conf spark.driver.cores=1  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer --conf spark.executor.extraClassPath=/home/rajeebp/TestProject/lib/ojdbc7-12.1.0.2.jar   --keytab /home/rajeebp/rajeebp.keytab --conf spark.driver.extraClassPath=/home/rajeebp/TestProject/lib/ojdbc7-12.1.0.2.jar
+
+2>import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql._
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.security.UserGroupInformation;
+import collection.mutable.HashMap
+import scala.collection.mutable.ArrayBuffer
+import java.sql.DriverManager
+import java.sql.Connection
+import java.sql.ResultSet
+import java.sql.Statement
+
+Class.forName("oracle.jdbc.driver.OracleDriver");
+
+3>val jdbcUrl = "jdbc:oracle:thin:@emdeciohpdwdb01.cloud.ge.com:1521:enndep01"(--link for prod/dev/qa)
+
+4>val username = "SSO502760986";
+val password = "May2017_ac"; 
+---------
+5> val dfOracleResult = spark.read.format("jdbc").option("url", jdbcUrl).option("dbtable", "iqp.IQP_BUSINESS_RULE_STG").option("user", username).option("password", password).load()
+
+
+6>dfOracleResult.write.format("orc").mode("overwrite").saveAsTable("g00103.tmp_soumya_customer")

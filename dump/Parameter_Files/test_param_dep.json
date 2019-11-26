@@ -1,0 +1,1234 @@
+{"SparkParameters":[
+   {
+      "table": "iqp_quotes_fact",
+      "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_customer_dim','iqp_item_category_dim','iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_sales_agg_legacy",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_sales_agg_erp','g00103.iqp_invoice_mgmt_fact','iqp_geography_dim','g00103.iqp_customer_dim','iqp_business_hier_dim','g00103.iqp_order_mgmt_fact','iqp_organization_dim','g00103.iqp_order_booking_fact_bravo','g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_sales_agg",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_sales_agg_legacy','g00103.iqp_project_dim')"
+       }
+   },
+   {
+	  "table": "iqp_contract_est_rev_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.IQP_CONTRACT_MGMT_FACT','g00103.iqp_invoice_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_contract_bklog_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_contract_est_rev_fact')"
+       }
+   },
+   {
+	  "table": "iqp_backlog_agg_load_erp",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_contract_bklog_fact','g00103.iqp_order_mgmt_fact','g00103.iqp_order_delivery_fact','g00103.iqp_customer_dim','iqp_business_hier_dim','g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_backlog_agg_legacy",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_backlog_agg_load_erp','iqp_geography_dim')"
+       }
+   },
+   {
+	  "table": "iqp_backlog_agg_cntrct",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_backlog_agg_legacy')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_bcklg_common_stg",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "8g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_common_stage')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_sales_customer_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "5g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_sales_itemwarehouse_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "10g",
+	"executor_memory": "10g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_order_customer_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "5g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_legacy_sales_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_order_itemwarehouse_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "10g",
+	"executor_memory": "10g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_legacy_sales_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_catalog_list",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "5g",
+	"location": "dim",
+	"deptables": "('g00103.iqp_legacy_order_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_customer_dim",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "8g",
+	"location": "dim",
+	"deptables": "('iqp_geography_dim')"
+       }
+   },
+   {
+	  "table": "iqp_quote_details_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "8g",
+	"location": "fact",
+	"deptables": "('iqp_ids_orders_fact','g00103.iqp_legacy_catalog_list','iqp_gl_code_combination_dim','iqp_salesrep_dim','iqp_business_hier_dim','g00103.iqp_itemwarehouse_dim','iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_order_mgmt_fact_legacy",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_mgmt_fact','iqp_geography_dim','g00103.iqp_customer_dim','g00103.iqp_legacy_catalog_list','iqp_business_hier_dim')"
+       }
+   },
+   {
+	  "table": "iqp_invoice_mgmt_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_mgmt_fact','g00103.iqp_order_mgmt_fact_legacy')"
+       }
+   },
+   {
+	  "table": "iqp_legacy_invoice_mgmt_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_invoice_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_smd_us_ref",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_order_booking_fact_bravo",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_mgmt_fact_legacy','g00103.iqp_smd_us_ref')"
+       }
+   },
+   {
+	  "table": "iqp_order_booking_fact_project",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo')"
+       }
+   },
+   {
+	  "table": "iqp_order_booking_fact_contract",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo')"
+       }
+   },
+   {
+	  "table": "iqp_order_booking_fact_legacy",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo')"
+       }
+   },
+   {
+	  "table": "iqp_update_table",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo','g00103.iqp_invoice_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_serial_number_shipped_fact_roc_retrn_sytln_ship_ora",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_serial_number_shipped_fact')"
+       }
+   },
+   {
+	  "table": "iqp_services_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_repairs_dim','g00103.o_iqp_incidents_dim')"
+       }
+   },
+   {
+	  "table": "iqp_services_fact_roc_retrn_sytln_ship_ora",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_services_fact')"
+       }
+   },
+   {
+	  "table": "iqp_project_fundings_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('iqp_agreement_dim')"
+       }
+   },
+   {
+	  "table": "iqp_project_budget_agg_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('iqp_proj_budget_version_fact')"
+       }
+   },
+   {
+	  "table": "iqp_project_backlog_agg",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_project_agg_fact','g00103.iqp_project_draft_revenue_fact','g00103.iqp_project_fundings_fact')"
+       }
+   },
+   {
+	  "table": "iqp_project_agg_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('iqp_proj_budget_version_fact','g00103.iqp_project_draft_revenue_fact','g00103.iqp_project_fundings_fact','g00103.iqp_project_player_dim','g00103.iqp_project_dim','iqp_organization_dim','g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_project_task_agg_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('iqp_proj_budget_version_fact','g00103.iqp_pa_cost_dist_lines_fact')"
+       }
+   },
+   {
+	  "table": "iqp_pa_estimated_npi_report_cx",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "pa",
+	"deptables": "('iqp_proj_budget_version_fact','g00103.iqp_pa_cost_dist_lines_fact','iqp_project_class_dim','g00103.iqp_project_dim','iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_project_summary_pa_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_pa_cost_dist_lines_fact','g00103.iqp_project_draft_revenue_fact','g00103.iqp_project_draft_invoice_fact','g00103.iqp_project_dim','g00103.iqp_project_fundings_fact')"
+       }
+   },
+   {
+	  "table": "iqp_enpp_program_report_cx1",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "5g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_enpp_program_report_cx')"
+       }
+   },
+   {
+	  "table": "iqp_warranty_summary_cx",
+	  "parameters": {
+	"executors": "1",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_warranty_expn_detail_cx')"
+       }
+   },
+   {
+	  "table": "iqp_delivery_metrics_cx",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others",
+	"deptables": "('g00103.iqp_order_delivery_fact','g00103.iqp_itemwarehouse_dim','iqp_item_category_dim','iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_inactive_suppliers_cx",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "8g",
+	"executor_memory": "40g",
+	"location": "others",
+	"deptables": "('iqp_organization_dim','iqp_employee_dim','iqp_vendor_dim','iqp_vendor_site_dim')"
+       }
+   },
+   {
+	  "table": "iqp_pulse_mkm_cost_product_agg",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others",
+	"deptables": "('g00103.iqp_order_delivery_fact','iqp_organization_dim','g00103.iqp_itemwarehouse_dim','iqp_item_category_dim')"
+       }
+   },
+   {
+	  "table": "iqp_sales_agg_erp",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_invoice_mgmt_fact','g00103.iqp_order_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_contract_mgmt_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_ap_invoice_dist_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('iqp_item_category_dim','iqp_vendor_dim','iqp_employee_dim','iqp_hold_ref','g00103.iqp_hmrc_rate_ref')"
+       }
+   },
+   {
+	  "table": "iqp_inventory_perpetual_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim','iqp_item_locator_dim')"
+       }
+   },
+   {
+	  "table": "iqp_inventory_summarized_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('iqp_vendor_dim','iqp_organization_dim','g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_item_inventory_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "15g",
+	"executor_memory": "15g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim','g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_material_trans_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_wip_discrete_job_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim','g00103.iqp_customer_dim','iqp_gl_code_combination_dim')"
+       }
+   },
+   {
+	  "table": "iqp_wip_transactions_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_demand_hist_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "inv",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_inv_horizontal_plan_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "inv",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_mrp_gross_requirement_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "10g",
+	"executor_memory": "15g",
+	"location": "inv",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_manufactured_item_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "inv",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_forward_plan_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "inv",
+	"deptables": "('iqp_organization_dim','g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_project_dim",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "5g",
+	"executor_memory": "5g",
+	"location": "dim",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "iqp_order_delivery_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('iqp_organization_dim','g00103.iqp_itemwarehouse_dim','g00103.iqp_customer_dim','extended_value_ref')"
+       }
+   },
+   {
+	  "table": "iqp_po_sourcing_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "20g",
+	"location": "fact",
+	"deptables": "('iqp_task_dim','g00103.iqp_project_dim','iqp_item_category_dim')"
+       }
+   },
+   {
+	  "table": "iqp_order_mgmt_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_legacy_catalog_list','iqp_geography_dim','iqp_organization_dim','iqp_employee_dim','g00103.iqp_customer_dim','g00103.iqp_itemwarehouse_dim','iqp_item_category_dim','iqp_salesrep_dim','iqp_business_hier_dim','iqp_gl_code_combination_dim')"
+       }
+   },
+   {
+	  "table": "iqp_qa_results_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "10",
+	"driver_memory": "15g",
+	"executor_memory": "20g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_itemwarehouse_dim')"
+       }
+   },
+   {
+	  "table": "iqp_serial_number_shipped_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_services_fact','g00103.iqp_customer_dim','g00103.iqp_itemwarehouse_dim','iqp_organization_dim','o_iqp_services_fact_roc_retrn_sytln_ship_ora')"
+       }
+   },
+   {
+	  "table": "iqp_quality_plan_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "15g",
+	"location": "quality",
+	"deptables": "('iqp_item_category_dim')"
+       }
+   },
+   {
+	  "table": "iqp_component_locator_dim",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "quality",
+	"deptables": "('g00103.iqp_repairs_dim')"
+       }
+   },
+   {
+	  "table": "iqp_warranty_expn_detail_cx",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('iqp_task_dim','iqp_vendor_dim','iqp_employee_dim','iqp_organization_dim','g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_pa_cost_dist_lines_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_project_dim')"
+       }
+   },
+   {
+	  "table": "ap_payment",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "15g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_ap_payments_details_fact','iqp_gl_code_combination_dim','iqp_organization_dim','g00103.iqp_project_dim','iqp_vendor_dim','iqp_vendor_site_dim')"
+       }
+   },
+   {
+	  "table": "iqp_billing_revenue_item",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_project_dim','g00103.iqp_customer_dim','iqp_organization_dim','g00103.iqp_project_player_dim')"
+       }
+   },
+   {
+	  "table": "iqp_gs_financial_dashboard_details",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo','iqp_business_hier_dim','iqp_geography_dim','g00103.iqp_sales_agg','g00103.IQP_BACKLOG_AGG')"
+       }
+   },
+   {
+	  "table": "iqp_rma_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_order_booking_fact_bravo','iqp_business_hier_dim','iqp_geography_dim','g00103.iqp_sales_agg','g00103.IQP_BACKLOG_AGG')"
+       }
+   },
+   {
+	  "table": "iqp_ap_invoice_line_agg_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "others",
+	"deptables": "('g00103.iqp_ap_invoice_dist_fact')"
+       }
+   },
+   {
+	  "table": "iqp_sn_genealogy_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others",
+	"deptables": "('g00103.iqp_order_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "manual_adjustment_flat_to_stg",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "ma",
+	"deptables": "('g00103.iqp_order_booking_fact_legacy','g00103.iqp_legacy_invoice_mgmt_fact','g00103.iqp_sales_agg','g00103.iqp_backlog_agg_update')"
+       }
+   },
+   {
+	  "table": "iqp_sc_adjustments_stg",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "ma",
+	"deptables": "('g00103.manual_adjustment_flatfile_to_stg')"
+       }
+   },
+   {
+	  "table": "upd_trans",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "ma",
+	"deptables": "('g00103.iqp_legacy_invoice_mgmt_fact','g00103.iqp_sales_agg')"
+       }
+   },
+   {
+	  "table": "iqp_agg_wip",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "ma",
+	"deptables": "('g00103.iqp_sc_adjustments_stg')"
+       }
+   },
+   {
+	  "table": "iqp_fact_ma",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "ma",
+	"deptables": "('g00103.iqp_agg_wip')"
+       }
+   },
+   {
+	  "table": "iqp_gs_financial_dashboard_details",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_order_booking_fact_legacy','g00103.iqp_sales_agg','g00103.iqp_backlog_agg_update')"
+       }
+   },
+   {
+	  "table": "iqp_project_summary_fact",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "pa",
+	"deptables": "('g00103.iqp_project_fundings_fact','g00103.iqp_project_draft_revenue_fact','g00103.iqp_pa_cost_dist_lines_fact','iqp_organization_dim')"
+       }
+   },
+   {
+	  "table": "pa_estimated_npi_report",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('iqp_project_class_dim','iqp_proj_budget_version_fact','g00103.iqp_pa_cost_dist_lines_fact','iqp_organization_dim','iqp_task_dim','iqp_gl_code_combination_dim')"
+       }
+   },
+   {
+	  "table": "iqp_backlog_agg",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_backlog_agg_cntrct','g00103.iqp_backlog_agg_legacy','g00103.iqp_backlog_agg_load_erp','g00103.upd_trans')"
+       }
+   },
+   {
+	  "table": "iqp_common_stg_flag_upd",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_order_booking_fact_legacy','g00103.iqp_legacy_invoice_mgmt_fact')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_af_ir_bcklog",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('g00103.iqp_srvc_f_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_af_ir_bcklog_dd",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('g00103.iqp_srvc_af_ir_bcklog')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_af_ir_bcklog_sc_dd",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('g00103.iqp_srvc_af_ir_bcklog_dd')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_af_rma_bcklog",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('g00103.iqp_srvc_f_rma','g00103.iqp_srvc_det_rma','g00103.iqp_srvc_d_tier')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_af_trngtracker_bcklog",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('g00103.iqp_srvc_f_trngtracker')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_trngtracker",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('iqp_business_hier_dim')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_f_trngtracker",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "10g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_trngtracker')"
+       }
+   },
+   {
+	  "table": "iqp_rma_detail_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('iqp_vendor_dim')"
+       }
+   },
+   {
+	  "table": "iqp_rma_detail_canc_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('iqp_vendor_dim','iqp_organization_dim','lkp_iqp_rma_stg','iqp_mfg_part_ref')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_rma_mark_roc",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('iqp_employee_dim','iqp_repair_task_dim','g00103.iqp_itemwarehouse_dim','iqp_item_category_dim','g00103.iqp_customer_dim','iqp_repairs_dim','g00103.iqp_rma_detail_canc_fact')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_rma",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('iqp_srvc_stg_rma_sfdc','g00103.iqp_order_booking_fact_legacy','g00103.iqp_srvc_stg_rma_mark_roc')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_det_rma",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_rma','iqp_srvc_stg_rma_sfdc_tier')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_ir",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_sc_all_cases','g00103.iqp_customer_dim')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_tier_d",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_d_tier",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_tier_d','g00103.iqp_srvc_det_rma')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_f_rma",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "20g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_d_tier','iqp_rma_status_stg')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_f_ir",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "15g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_stg_tnps_commops",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_f_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_f_tnps",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "15g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_stg_tnps_commops','g00103.iqp_srvc_f_rma')"
+       }
+   },
+   {
+	  "table": "sales_to_csv",
+	  "parameters": {
+	"executors": "2",
+	"cores": "4",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "inv",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "iqp_update_table_only_sales",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "fact",
+	"deptables": "('g00103.iqp_sales_agg')"
+       }
+   },
+   {
+	  "table": "supplier_ageing_altais_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "iqp_sn_genealogy_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_sn_genealogy_fact')"
+       }
+   },
+   {
+	  "table": "iqp_quotes_dashboard_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "reports",
+	"deptables": "('g00103.iqp_quotes_fact','g00103.iqp_order_mgmt_fact_legacy')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_report_ir",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_f_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_report_rma",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_f_rma')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_report_tnps",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_daily",
+	"deptables": "('g00103.iqp_srvc_f_tnps','g00103.iqp_srvc_f_ir')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_report_rma_backlog",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "iqp_srvc_report_ir_backlog",
+	  "parameters": {
+	"executors": "3",
+	"cores": "4",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "srvc_weekly",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "customer_age_report",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "iqp_dart_fact",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "others",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+	  "table": "revrec_backlog_financial_dashboard",
+	  "parameters": {
+	"executors": "2",
+	"cores": "3",
+	"driver_memory": "30g",
+	"executor_memory": "30g",
+	"location": "reports",
+	"deptables": "('xyz')"
+       }
+   }
+  ]}

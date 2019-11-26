@@ -1,0 +1,638 @@
+D:\TechM\AC480584\Personal\Softwares\MongoDB\Server\3.4\bin>mongod.exe --config mongo.config
+
+D:\TechM\AC480584\Personal\Softwares\MongoDB\Server\3.4\bin>mongos.exe
+
+
+_id is a 12 bytes hexadecimal number which assures the uniqueness of every document. 
+You can provide _id while inserting the document. 
+If you don’t provide then MongoDB provides a unique id for every document. 
+These 12 bytes first 4 bytes for the current timestamp, next 3 bytes for machine id, next 2 bytes for process id of MongoDB server and remaining 3 bytes are simple incremental VALUE.
+
+12=4(timestamp)+3(machine id)+2(process_id)+3(incremental value)
+
+RDBMS	    MongoDB
+Database	Database
+Table	    Collection
+Tuple/Row	Document
+column	    Field
+Table Join	Embedded Documents
+Primary Key	Primary Key (Default key _id provided by mongodb itself)
+
+Database Server and Client
+
+Mysqld/Oracle	mongod
+mysql/sqlplus	mongo
+
+
+The createCollection() Method
+MongoDB db.createCollection(name, options) is used to create collection.
+
+Syntax
+Basic syntax of createCollection() command is as follows −
+
+db.createCollection(name, options)
+In the command, name is name of collection to be created. Options is a document and is used to specify configuration of collection.
+
+Parameter	Type	Description
+Name	String	Name of the collection to be created
+Options	Document	(Optional) Specify options about memory size and indexing
+Options parameter is optional, so you need to specify only the name of the collection. Following is the list of options you can use −
+
+
+Field	Type	Description
+capped	Boolean	(Optional) If true, enables a capped collection. Capped collection is a fixed size collection that automatically overwrites its oldest entries when it reaches its maximum size. If you specify true, you need to specify size parameter also.
+autoIndexId	Boolean	(Optional) If true, automatically create index on _id field.s Default value is false.
+size	number	(Optional) Specifies a maximum size in bytes for a capped collection. If capped is true, then you need to specify this field also.
+max	number	(Optional) Specifies the maximum number of documents allowed in the capped collection.
+While inserting the document, MongoDB first checks size field of capped collection, then it checks max field.
+
+Examples
+Basic syntax of createCollection() method without options is as follows −
+
+>use test
+switched to db test
+>db.createCollection("mycollection")
+{ "ok" : 1 }
+>
+You can check the created collection by using the command show collections.
+
+>show collections
+mycollection
+system.indexes
+The following example shows the syntax of createCollection() method with few important options −
+
+>db.createCollection("mycol", { capped : true, autoIndexId : true, size : 
+   6142800, max : 10000 } )
+{ "ok" : 1 }
+>
+In MongoDB, you don't need to create collection. MongoDB creates collection automatically, when you insert some document.
+
+>db.tutorialspoint.insert({"name" : "tutorialspoint"})
+>show collections
+mycol
+mycollection
+system.indexes
+tutorialspoint
+>
+
+
+//DROP Collection
+
+db.COLLECTION_NAME.drop()
+
+db.mycol.insert({
+   _id: ObjectId("507f1f77bcf86cd799439011"),  ---12 byte binary ---24 charater Hexadecimal ---Anything less than 24 it won't take
+
+   title: 'MongoDB Overview', 
+   description: 'MongoDB is no sql database',
+   by: 'tutorials point',
+   url: 'http://www.tutorialspoint.com',
+   tags: ['mongodb', 'database', 'NoSQL'],
+   likes: 100
+})
+>db.post.insert([
+   {
+      title: 'MongoDB Overview', 
+      description: 'MongoDB is no sql database',
+      by: 'tutorials point',
+      url: 'http://www.tutorialspoint.com',
+      tags: ['mongodb', 'database', 'NoSQL'],
+      likes: 100
+   },
+	
+   {
+      title: 'NoSQL Database', 
+      description: "NoSQL database doesn't have tables",
+      by: 'tutorials point',
+      url: 'http://www.tutorialspoint.com',
+      tags: ['mongodb', 'database', 'NoSQL'],
+      likes: 20, 
+      comments: [	
+         {
+            user:'user1',
+            message: 'My first comment',
+            dateCreated: new Date(2013,11,10,2,35),
+            like: 0 
+         }
+      ]
+   }
+])
+
+To insert the document you can use db.post.save(document) also. 
+If you don't specify _id in the document then save() method will work same as insert() method. 
+If you specify _id then it will replace whole data of document containing _id as specified in save() method.
+
+RDBMS Where Clause Equivalents in MongoDB
+To query the document on the basis of some condition, you can use following operations.
+
+Operation	            Syntax	                    Example                                      	RDBMS Equivalent
+Equality	            {<key>:<value>}	         db.mycol.find({"by":"tutorials point"}).pretty()	where by = 'tutorials point'
+Less Than	         {<key>:{$lt:<value>}}	     db.mycol.find({"likes":{$lt:50}}).pretty()	        where likes < 50
+Less Than Equals     {<key>:{$lte:<value>}}	     db.mycol.find({"likes":{$lte:50}}).pretty()	    where likes <= 50
+Greater Than	     {<key>:{$gt:<value>}}	     db.mycol.find({"likes":{$gt:50}}).pretty()	        where likes > 50
+Greater Than Equals	 {<key>:{$gte:<value>}}	     db.mycol.find({"likes":{$gte:50}}).pretty()	    where likes >= 50
+Not Equals	         {<key>:{$ne:<value>}}	     db.mycol.find({"likes":{$ne:50}}).pretty()	        where likes != 50
+
+//QUERY
+
+db.mycol.find({"likes": {$gt:10}, $or: [{"by": "tutorials point"},
+{"title": "MongoDB Overview"}]}).pretty()
+
+db.mycol.find({"likes":{$gte:10} ,$or: [{"by" :   "tutorials point" } ,{"description" : "MongoDB is no sql database"}]}).pretty()
+
+db.mycol.update({"title":"MongoDB Overview"},{$set:{"title":"New MongoDB Tutorial"}})
+
+//SAVE(will replace the object_id data)
+
+BEFORE
+
+       "_id" : ObjectId("507f1f77bcf86cd799439011"),
+       "title" : "MongoDB Overview",
+       "description" : "MongoDB is no sql database",
+       "by" : "tutorials point",
+       "url" : "http://mongoofficial.com",
+       "tags" : [
+               "mongodb",
+               "database",
+               "NoSQL"
+       ],
+       "likes" : 100
+
+AFTER
+
+db.mycol.save(
+   {
+      "_id" : ObjectId("507f1f77bcf86cd799439011"), "title":"Tutorials Point New Topic",
+         "by":"Tutorials Point"
+   }
+)
+
+
+"_id" : ObjectId("507f1f77bcf86cd799439011"),
+"title" : "Tutorials Point New Topic",
+"by" : "Tutorials Point"
+
+REMOVE
+
+db.mycol.remove({'title':'MongoDB Overview'})
+
+
+MONGODB - PROJECTION
+
+In MongoDB, projection means selecting only the necessary data rather than selecting whole of the data of a document.
+If a document has 5 fields and you need to show only 3, then select only 3 fields from them.
+
+db.COLLECTION_NAME.find({},{KEY:1})
+
+db.mycol.find({'title':'Tutorials Point New Topic'})
+
+"_id" : ObjectId("507f1f77bcf86cd799439011"),
+"title" : "Tutorials Point New Topic",
+"by" : "Tutorials Point"
+
+db.mycol.find({'title':'Tutorials Point New Topic'},{'_id':0}).pretty() --won't show the id
+   
+"title" : "Tutorials Point New Topic",
+"by" : "Tutorials Point"
+
+
+{ "title" : "Tutorials Point New Topic", "by" : "Tutorials Point" }
+MongoDB Enterprise > db.mycol.find({'title':'Tutorials Point New Topic'})
+{ "_id" : ObjectId("507f1f77bcf86cd799439011"), "title" : "Tutorials Point Ne
+opic", "by" : "Tutorials Point" }
+MongoDB Enterprise > db.mycol.find({},{"title":1,"_id":0})
+{ "title" : "Tutorials Point New Topic" }
+MongoDB Enterprise > db.mycol.find({},{"title":1,"_id":0}).limit(1)
+{ "title" : "Tutorials Point New Topic" }
+MongoDB Enterprise > db.mycol.find({},{"title":1,"_id":0}).limit(1).skip(1)---Nothing
+
+Sorting
+
+1- Ascending
+-1- Descending
+
+MongoDB Enterprise > db.mycol.find({},{"title":1},{"_id":0}).sort({"_id":1})
+{ "_id" : ObjectId("507f1f77bcf86cd799439011"), "title" : "Tutorials Point New T
+opic" }
+MongoDB Enterprise > db.mycol.find({},{"title":1},{"_id":0}).sort({"title":1})
+{ "_id" : ObjectId("507f1f77bcf86cd799439011"), "title" : "Tutorials Point New T
+opic" }
+MongoDB Enterprise > db.mycol.find({},{"title":1,"_id":0}).sort({"title":1})
+{ "title" : "Tutorials Point New Topic" }
+
+Indexing
+
+db.mycol.ensureIndex({"title":1,"by":-1})
+
+db.mycol.insert(
+{
+   _id: ObjectId("7df78ad8902c7df78ad8902c"),
+   title: 'MongoDB Overview', 
+   description: 'MongoDB is no sql database',
+   by_user: 'tutorials point',
+   url: 'http://www.tutorialspoint.com',
+   tags: ['mongodb', 'database', 'NoSQL'],
+   likes: 100
+},
+{
+   _id: ObjectId("7df78ad8902d7df78ad8902d"),
+   title: 'NoSQL Overview', 
+   description: 'No sql database is very fast',
+   by_user: 'tutorials point',
+   url: 'http://www.tutorialspoint.com',
+   tags: ['mongodb', 'database', 'NoSQL'],
+   likes: 10
+},
+{
+   _id: ObjectId("7df78ad8902e7df78ad8902e"),
+   title: 'Neo4j Overview', 
+   description: 'Neo4j is no sql database',
+   by_user: 'Neo4j',
+   url: 'http://www.neo4j.com',
+   tags: ['neo4j', 'database', 'NoSQL'],
+   likes: 750
+})
+
+
+db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : 1}}}])
+{
+   "result" : [
+      {
+         "_id" : "tutorials point",
+         "num_tutorial" : 2
+      },
+      {
+         "_id" : "Neo4j",
+         "num_tutorial" : 1
+      }
+   ],
+   "ok" : 1
+}
+
+MongoDB Enterprise > db.mycol.aggregate({$group: { _id : "$by_user" , num_tutorial : {$sum : 1}}})
+{ "_id" : "Neo4j", "num_tutorial" : 1 }
+{ "_id" : "tutorials point", "num_tutorial" : 2 }
+{ "_id" : null, "num_tutorial" : 1 }
+
+MongoDB Enterprise > db.mycol.aggregate({$group: { _id : "$by_user" , num_tutorial : {$sum : "$likes"}}})
+{ "_id" : "Neo4j", "num_tutorial" : 750 }
+{ "_id" : "tutorials point", "num_tutorial" : 110 }
+{ "_id" : null, "num_tutorial" : 0 }
+
+
+$sum	Sums up the defined value from all documents in the collection.	db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : "$likes"}}}])
+$avg	Calculates the average of all given values from all documents in the collection.	db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$avg : "$likes"}}}])
+$min	Gets the minimum of the corresponding values from all documents in the collection.	db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$min : "$likes"}}}])
+$max	Gets the maximum of the corresponding values from all documents in the collection.	db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$max : "$likes"}}}])
+$push	Inserts the value to an array in the resulting document.	db.mycol.aggregate([{$group : {_id : "$by_user", url : {$push: "$url"}}}])
+$addToSet	Inserts the value to an array in the resulting document but does not create duplicates.	db.mycol.aggregate([{$group : {_id : "$by_user", url : {$addToSet : "$url"}}}])
+$first	Gets the first document from the source documents according to the grouping. Typically this makes only sense together with some previously applied “$sort”-stage.	db.mycol.aggregate([{$group : {_id : "$by_user", first_url : {$first : "$url"}}}])
+$last	Gets the last document from the source documents according to the grouping. Typically this makes only sense together with some previously applied “$sort”-stage.	db.mycol.aggregate([{$group : {_id : "$by_user", last_url : {$last : "$url"}}}])
+
+JAVA
+
+Insert a Document
+To insert a document into MongoDB, insert() method of com.mongodb.client.MongoCollection class is used.
+
+Following is the code snippet to insert a document −
+
+import com.mongodb.client.MongoCollection; 
+import com.mongodb.client.MongoDatabase; 
+
+import org.bson.Document;  
+import com.mongodb.MongoClient; 
+import com.mongodb.MongoCredential;  
+
+public class InsertingDocument { 
+   
+   public static void main( String args[] ) {  
+      
+      // Creating a Mongo client 
+      MongoClient mongo = new MongoClient( "localhost" , 27017 ); 
+
+      // Creating Credentials 
+      MongoCredential credential; 
+      credential = MongoCredential.createCredential("sampleUser", "myDb", 
+         "password".toCharArray()); 
+      System.out.println("Connected to the database successfully");  
+      
+      // Accessing the database 
+      MongoDatabase database = mongo.getDatabase("myDb"); 
+
+      // Retrieving a collection
+      MongoCollection<Document> collection = database.getCollection("sampleCollection"); 
+      System.out.println("Collection sampleCollection selected successfully");
+
+      Document document = new Document("title", "MongoDB") 
+      .append("id", 1)
+      .append("description", "database") 
+      .append("likes", 100) 
+      .append("url", "http://www.tutorialspoint.com/mongodb/") 
+      .append("by", "tutorials point");  
+      collection.insertOne(document); 
+      System.out.println("Document inserted successfully");     
+   } 
+}
+
+Update Document
+To update a document from the collection, updateOne() method of com.mongodb.client.MongoCollection class is used.
+
+Following is the program to select the first document −
+
+import com.mongodb.client.FindIterable; 
+import com.mongodb.client.MongoCollection; 
+import com.mongodb.client.MongoDatabase; 
+import com.mongodb.client.model.Filters; 
+import com.mongodb.client.model.Updates; 
+
+import java.util.Iterator; 
+import org.bson.Document;  
+import com.mongodb.MongoClient; 
+import com.mongodb.MongoCredential;  
+
+public class UpdatingDocuments { 
+   
+   public static void main( String args[] ) {  
+      
+      // Creating a Mongo client 
+      MongoClient mongo = new MongoClient( "localhost" , 27017 ); 
+     
+      // Creating Credentials 
+      MongoCredential credential; 
+      credential = MongoCredential.createCredential("sampleUser", "myDb", 
+         "password".toCharArray()); 
+      System.out.println("Connected to the database successfully");  
+      
+      // Accessing the database 
+      MongoDatabase database = mongo.getDatabase("myDb"); 
+
+      // Retrieving a collection 
+      MongoCollection<Document> collection = database.getCollection("sampleCollection");
+      System.out.println("Collection myCollection selected successfully"); 
+
+      collection.updateOne(Filters.eq("id", 1), Updates.set("likes", 150));       
+      System.out.println("Document update successfully...");  
+      
+      // Retrieving the documents after updation 
+      // Getting the iterable object
+      FindIterable<Document> iterDoc = collection.find(); 
+      int i = 1; 
+
+      // Getting the iterator 
+      Iterator it = iterDoc.iterator(); 
+
+      while (it.hasNext()) {  
+         System.out.println(it.next());  
+         i++; 
+      }     
+   }  
+}
+
+Users collection
+
+db.users.insert({
+   "_id":ObjectId("52ffc33cd85242f436000001"),
+   "contact": "987654321",
+   "dob": "01-01-1991",
+   "name": "Tom Benzamin",
+   "address": [
+      {
+         "building": "22 A, Indiana Apt",
+         "pincode": 123456,
+         "city": "Los Angeles",
+         "state": "California"
+      },
+      {
+         "building": "170 A, Acropolis Apt",
+         "pincode": 456789,
+         "city": "Chicago",
+         "state": "Illinois"
+      }
+   ]
+   }) 
+
+findOne(Like)
+
+db.users.findOne({"name":"Tom Benzamin"},{"address":1})
+
+MongoDB Enterprise > db.users.findOne({"name":"Tom Benzamin"},{"address":1})
+{
+        "_id" : ObjectId("52ffc33cd85242f436000001"),
+        "address" : [
+                {
+                        "building" : "22 A, Indiana Apt",
+                        "pincode" : 123456,
+                        "city" : "Los Angeles",
+                        "state" : "California"
+                },
+                {
+                        "building" : "170 A, Acropolis Apt",
+                        "pincode" : 456789,
+                        "city" : "Chicago",
+                        "state" : "Illinois"
+                }
+        ]
+}
+
+sample users hierarchy
+ we will need two queries: first to fetch the address_ids fields from user document and second to fetch these addresses from address collection.
+
+
+>var result = db.users.findOne({"name":"Tom Benzamin"},{"address_ids":1})
+>var addresses = db.address.find({"_id":{"$in":result["address_ids"]}})
+
+MongoDB Enterprise > db.address.find().pretty()
+{
+        "_id" : ObjectId("52ffc4a5d85242602e000001"),
+        "name" : "Tom Hanks",
+        "contact" : "987654321",
+        "dob" : "01-01-1991"
+}
+{
+        "_id" : ObjectId("52ffc4a5d85242602e000000"),
+        "building" : "22 A, Indiana Apt",
+        "pincode" : 123456,
+        "city" : "Los Angeles",
+        "state" : "California"
+}
+MongoDB Enterprise > db.user.insert({
+... "name":"anurag",
+... "title":"hutiya",
+... "dob":"01-01-1995",
+... "address_ids":[
+...  ObjectId("52ffc4a5d85242602e000000"),
+...       ObjectId("52ffc4a5d85242602e000001")
+...    ]
+... })
+
+find---all
+findOne---only one
+
+MongoDB Enterprise > db.address.find({"_id":{"$in":result["address_ids"]}}).pretty()
+[{
+        "_id" : ObjectId("52ffc4a5d85242602e000000"),
+        "building" : "22 A, Indiana Apt",
+        "pincode" : 123456,
+        "city" : "Los Angeles",
+        "state" : "California"
+},
+{
+{
+        "_id" : ObjectId("52ffc4a5d85242602e000001"),
+        "name" : "Tom Hanks",
+        "contact" : "987654321",
+        "dob" : "01-01-1991"
+}]
+
+
+DBRefs vs Manual References
+
+Using DBRefs
+There are three fields in DBRefs −
+
+$ref(collection) − This field specifies the collection of the referenced document
+
+$id(_id) − This field specifies the _id field of the referenced document
+
+$db(database) − This is an optional field and contains the name of the database in which the referenced document lies
+
+
+MongoDB Enterprise > db.users.insert({
+... "_id":ObjectId("52ffc4a5e85242602e000000"),
+... "contact":"12345678",
+... "name":"Refrential Check",
+... "address":{
+... "$ref":"address",
+... "$id":ObjectId("52ffc4a5d85242602e000000")}
+... })
+
+
+result=db.users.find({"name":"Refrential Check"},{"address":1})
+
+MongoDB Enterprise > db.users.find({"name":"Refrential Check"},{"address":1}).pretty()
+{
+        "_id" : ObjectId("52ffc4a5e85242602e000000"),
+        "address" : DBRef("address", ObjectId("52ffc4a5d85242602e000000"))
+}
+
+db.address.find({"_id":db.users.find({"name":"Refrential Check"},{"address":1}).address.$id})
+
+var user = db.users.findOne({"name":"Tom Benzamin"})
+var dbRef = user.address
+db[dbRef.$ref].findOne({"_id":(dbRef.$id)})
+
+
+MongoDB Enterprise > db[dbRef.$ref].findOne({"_id":(dbRef.$id)})
+{
+        "_id" : ObjectId("52ffc4a5d85242602e000000"),
+        "building" : "22 A, Indiana Apt",
+        "pincode" : 123456,
+        "city" : "Los Angeles",
+        "state" : "California"
+}
+
+MongoDB - Covered Queries
+
+As per the official MongoDB documentation, a covered query is a query in which −
+
+All the fields in the query are part of an index.
+All the fields returned in the query are in the same index.
+Since all the fields present in the query are part of an index, MongoDB matches the query conditions and returns the result using the same index without actually looking inside the documents. Since indexes are present in RAM, fetching data from indexes is much faster as compared to fetching data by scanning documents.
+
+Using Covered Queries
+To test covered queries, consider the following document in the users collection −
+
+{
+   "_id": ObjectId("53402597d852426020000002"),
+   "contact": "987654321",
+   "dob": "01-01-1991",
+   "gender": "M",
+   "name": "Tom Benzamin",
+   "user_name": "tombenzamin"
+}
+We will first create a compound index for the users collection on the fields gender and user_name using the following query −
+
+>db.users.ensureIndex({gender:1,user_name:1})
+Now, this index will cover the following query −
+
+>db.users.find({gender:"M"},{user_name:1,_id:0})
+That is to say that for the above query, MongoDB would not go looking into database documents. Instead it would fetch the required data from indexed data which is very fast.
+
+Since our index does not include _id field, we have explicitly excluded it from result set of our query, as MongoDB by default returns _id field in every query. So the following query would not have been covered inside the index created above −
+
+>db.users.find({gender:"M"},{user_name:1})
+Lastly, remember that an index cannot cover a query if −
+
+Any of the indexed fields is an array
+Any of the indexed fields is a subdocument
+
+
+
+MongoDB - Analyzing Queries
+
+$ explain && $hint
+
+Using $explain
+The $explain operator provides information on the query, indexes used in a query and other statistics. It is very useful when analyzing how well your indexes are optimized.
+
+In the last chapter, we had already created an index for the users collection on fields gender and user_name using the following query −
+
+>db.users.ensureIndex({gender:1,user_name:1})
+We will now use $explain on the following query −
+
+>db.users.find({gender:"M"},{user_name:1,_id:0}).explain()
+The above explain() query returns the following analyzed result −
+
+{
+   "cursor" : "BtreeCursor gender_1_user_name_1",
+   "isMultiKey" : false,
+   "n" : 1,
+   "nscannedObjects" : 0,
+   "nscanned" : 1,
+   "nscannedObjectsAllPlans" : 0,
+   "nscannedAllPlans" : 1,
+   "scanAndOrder" : false,
+   "indexOnly" : true,
+   "nYields" : 0,
+   "nChunkSkips" : 0,
+   "millis" : 0,
+   "indexBounds" : {
+      "gender" : [
+         [
+            "M",
+            "M"
+         ]
+      ],
+      "user_name" : [
+         [
+            {
+               "$minElement" : 1
+            },
+            {
+               "$maxElement" : 1
+            }
+         ]
+      ]
+   }
+}
+We will now look at the fields in this result set −
+
+The true value of indexOnly indicates that this query has used indexing.
+
+The cursor field specifies the type of cursor used. BTreeCursor type indicates that an index was used and also gives the name of the index used. BasicCursor indicates that a full scan was made without using any indexes.
+
+n indicates the number of documents matching returned.
+
+nscannedObjects indicates the total number of documents scanned.
+
+nscanned indicates the total number of documents or index entries scanned.
+
+Using $hint
+The $hint operator forces the query optimizer to use the specified index to run a query. This is particularly useful when you want to test performance of a query with different indexes. For example, the following query specifies the index on fields gender and user_name to be used for this query −
+
+>db.users.find({gender:"M"},{user_name:1,_id:0}).hint({gender:1,user_name:1})
+To analyze the above query using $explain −
+
+>db.users.find({gender:"M"},{user_name:1,_id:0}).hint({gender:1,user_name:1}).explain()
+
+

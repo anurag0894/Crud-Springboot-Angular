@@ -1,0 +1,6 @@
+oracle---greenplum(external)--hive(external)---hive(internal)
+Tableau---MIT kerberos
+Talend--principal.keytab(principal--rajeebp.DLX.IDC.GE.COM)--(name-rajeebp.keytab)
+For killing any yarn application--yarn application -kill  application_1512769412170_3238
+Running status--http://alphd1dx001.dlx.idc.ge.com:8088/cluster/apps/RUNNING
+History server--http://alphd1dx000.dlx.idc.ge.com:18081/

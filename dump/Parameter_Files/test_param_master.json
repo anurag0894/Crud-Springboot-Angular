@@ -1,0 +1,79 @@
+{"SparkParameters":[
+   {
+      "table": "master_ref",
+      "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "8g",
+	"location": "dim",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+      "table": "master_dim",
+      "parameters": {
+	"executors": "3",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "8g",
+	"location": "dim",
+	"deptables": "('oe_lines_changed_ref','extended_value_ref','fnd_segment_values_ref','iqp_hold_ref','iqp_inv_dist_ln_chng_ref')"
+       }
+   },
+   {
+      "table": "master_fact",
+      "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "fact",
+	"deptables": "('iqp_vendor_site_dim','iqp_organization_dim','iqp_employee_dim')"
+       }
+   },
+   {
+      "table": "master_quality",
+      "parameters": {
+	"executors": "1",
+	"cores": "5",
+	"driver_memory": "2g",
+	"executor_memory": "8g",
+	"location": "quality",
+	"deptables": "('iqp_organization_dim')"
+       }
+   },
+   {
+      "table": "master_pa",
+      "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "8g",
+	"executor_memory": "10g",
+	"location": "pa",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+      "table": "master_services",
+      "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "20g",
+	"location": "srvc_daily",
+	"deptables": "('xyz')"
+       }
+   },
+   {
+      "table": "master_dim_psm2",
+      "parameters": {
+	"executors": "2",
+	"cores": "5",
+	"driver_memory": "30g",
+	"executor_memory": "20g",
+	"location": "dim",
+	"deptables": "('xyz')"
+       }
+   }
+  ]}
