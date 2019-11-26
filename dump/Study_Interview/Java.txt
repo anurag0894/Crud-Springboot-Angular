@@ -1,2 +1,0 @@
-JVM(Virtual Machine--Bytecode conversion),JRE(Runtime Environment--Library),JDK(Development Kit--Javac,jar archiver,jar doc)
-
